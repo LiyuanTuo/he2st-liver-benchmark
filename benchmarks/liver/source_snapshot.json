@@ -1,0 +1,12 @@
+{
+  "src\\he2st\\__init__.py": "1f8fab52d89fccc854d1e572a4dab93f566b9f77eb395c427c256d61ff8505a2",
+  "src\\he2st\\cli.py": "bd1d4157639e7aa821fbc6c9c001f5f816f15c2123af302bf9d9ec29f73ebfe5",
+  "src\\he2st\\data.py": "5b95b2cf3ba7b8b7af20ed812d22958f6a34f38355ba371a1c73483ff750346e",
+  "src\\he2st\\engine.py": "e33bb07a7d3caa37573b5d4d19ae85727ad707ad5bcf4bf8b5c4a453ce9d607b",
+  "src\\he2st\\metrics.py": "1e6b6187ea96f4ac07ca2752509362ca9d22428f25bf538d9c3625eb60ddcd03",
+  "src\\he2st\\models.py": "cb00115014d58a6fa92e490d84052f83989f86e3a630f3af5606cd78c0289b3a",
+  "src\\he2st\\preprocessing.py": "2e06511baf28ca02295142b8b8cb64fe55ff7fc80ad928adaa83d7ea57ed7bae",
+  "configs\\efficientnet_b0_ema.json": "def66355e5621d0a8ecedb3d8cadafe03cd23ead76753e1dac0f73d8e7d06ef3",
+  "configs\\resnet18_ema.json": "9ffc1c09c886800424fa14d14bf61435d98729842a18e9f2fcd186856af5f1a3",
+  "configs\\resnet18_spatial.json": "97839105f6f35e50b11e9dbcfa9addeea19560a05810a811322f017c153bd624"
+}
