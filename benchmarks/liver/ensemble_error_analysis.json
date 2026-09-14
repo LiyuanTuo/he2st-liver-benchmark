@@ -1,0 +1,15 @@
+{
+  "description": "Post-hoc error diversity on fixed D1; not used for model or weight selection",
+  "component_MSE": {
+    "old_seed42": 0.427153080701828,
+    "old_seed17": 0.4268927276134491,
+    "old_seed83": 0.4209460914134979,
+    "resnet18_ema": 0.44097182154655457,
+    "efficientnet_b0_ema": 0.42439648509025574,
+    "resnet18_spatial": 0.4399236738681793,
+    "prior_ensemble": 0.42069804668426514,
+    "final_ensemble": 0.42119526863098145
+  },
+  "off_diagonal_error_correlation_min": 0.9737271352958732,
+  "off_diagonal_error_correlation_max": 0.9923894131758204
+}

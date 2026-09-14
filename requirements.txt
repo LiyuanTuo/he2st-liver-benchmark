@@ -1,0 +1,3 @@
+# Dependencies are declared once in pyproject.toml.
+# With an existing global environment, first use: python run.py doctor
+-e .

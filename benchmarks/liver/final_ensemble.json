@@ -1,0 +1,89 @@
+{
+  "name": "C1-selected six-model ContextFusion ensemble",
+  "selection": "C1 HEG200 PCC; weights locked before this round D1 evaluation",
+  "genes_sha256": "4dab411dd5565b34312fd10b927ad4c806408477c29ede1eea30259b035f0181",
+  "data": {
+    "arrays": "data/processed/gse240429_heg/arrays",
+    "images": "data/processed/gse240429/context_20260913",
+    "panel": "benchmarks/liver/genes.csv",
+    "scales": [
+      224,
+      896,
+      1792
+    ]
+  },
+  "components": [
+    {
+      "name": "old_seed42",
+      "format": "legacy_contextfusion",
+      "checkpoint": "results/liver_context_fusion_20260913/imagenet_best.pt",
+      "tta": false,
+      "epoch": 9,
+      "weight": 0.25,
+      "sha256": "f00fa165096fec1e45b659328bedf1b733c38a45ef0e77f561fb0a66a07c6b6b"
+    },
+    {
+      "name": "old_seed17",
+      "format": "legacy_contextfusion",
+      "checkpoint": "results/liver_context_fusion_seed17_20260913/imagenet_best.pt",
+      "tta": false,
+      "epoch": 9,
+      "weight": 0.25,
+      "sha256": "86a1b037b2ebb08487b127b1e5abb86110501faba9327d0b7ccb17f1786cadaf"
+    },
+    {
+      "name": "old_seed83",
+      "format": "legacy_contextfusion",
+      "checkpoint": "results/liver_context_fusion_seed83_20260913/imagenet_best.pt",
+      "tta": true,
+      "epoch": 19,
+      "weight": 0.25,
+      "sha256": "bb55b6367d80907ec985c2e5c2f5ee55685dda1cca11e5a56117b114cf474839"
+    },
+    {
+      "name": "resnet18_ema",
+      "format": "core",
+      "checkpoint": "results/optimization_20260914/resnet18_ema/best.pt",
+      "tta": true,
+      "epoch": 8,
+      "weight": 0.08333333333333333,
+      "sha256": "5505fd5991cc887ac8a559e74b8a4d0fb9edd8b5040b116afdc10e2be8cfc146"
+    },
+    {
+      "name": "efficientnet_b0_ema",
+      "format": "core",
+      "checkpoint": "results/optimization_20260914/efficientnet_b0_ema/best.pt",
+      "tta": true,
+      "epoch": 11,
+      "weight": 0.08333333333333333,
+      "sha256": "dc838b7bb20088eb343dab33292a5cb4499358dc9e2b0b8204e8992929743a3d"
+    },
+    {
+      "name": "resnet18_spatial",
+      "format": "core",
+      "checkpoint": "results/optimization_20260914/resnet18_spatial/best.pt",
+      "tta": false,
+      "epoch": 8,
+      "weight": 0.08333333333333333,
+      "sha256": "8d74ee193a821ab5e5ca93a5b818c29c6e6fe088f3c8238fb862e470c75f1488"
+    }
+  ],
+  "groups": [
+    {
+      "weight": 0.75,
+      "members": [
+        "old_seed42",
+        "old_seed17",
+        "old_seed83"
+      ]
+    },
+    {
+      "weight": 0.25,
+      "members": [
+        "resnet18_ema",
+        "efficientnet_b0_ema",
+        "resnet18_spatial"
+      ]
+    }
+  ]
+}

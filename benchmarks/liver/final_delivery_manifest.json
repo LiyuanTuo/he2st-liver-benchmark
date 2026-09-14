@@ -1,0 +1,27 @@
+{
+  "report_pages": 13,
+  "presentation_pages": 11,
+  "ppt_text_overflow": false,
+  "latex_overfull_boxes": false,
+  "credential_pattern_matches": [],
+  "files": {
+    "report/main.tex": "eaba57006820081822035e00a26a95933221504a92ff1e1a0ae4bc80b50bf84c",
+    "report/main.pdf": "90989dc49e3c001a6279950495a040f88059dc60ee14ce820fe15803edaeb03a",
+    "presentation/final_report.pptx": "0c7ed28fb2c4b79351fe074ffbd52fc82c564abc8ef88ace3ba210d497b264b0",
+    "presentation/final_report.pdf": "1550ed6b387ad86126d0864b71a1f9a44c4b7d927a5b40ee8c33dbcc7efbbebd",
+    "benchmarks/liver/final_ensemble.json": "4a0cd654ec61027a4b6a5b5cf0056e77120b797c3eabd182a14047e558f90c72",
+    "benchmarks/liver/final_ensemble_verification.json": "2c730de799d852317f957ecf3845fc8959ff486ce162ef85f7bc115fff6972df"
+  },
+  "hash_policy": "Binary files: exact bytes; text files: UTF-8 with CRLF normalized to LF",
+  "tests_passed": 11,
+  "source_files_sha256": {
+    "src/he2st/__init__.py": "3cd7d9a7cc6ea083c10ff49f6e56bc698f76e39b354029e89da63a70db2bb802",
+    "src/he2st/cli.py": "e06c14bdcd95d403c400a7ae1a76d54178e25c56181a33ddfd8bdf10df159f32",
+    "src/he2st/data.py": "5b95b2cf3ba7b8b7af20ed812d22958f6a34f38355ba371a1c73483ff750346e",
+    "src/he2st/engine.py": "e33bb07a7d3caa37573b5d4d19ae85727ad707ad5bcf4bf8b5c4a453ce9d607b",
+    "src/he2st/ensemble.py": "fa91ce0f89fd8cd0cad4ca8857d406247289e80fbb77e619e69af1951ad47277",
+    "src/he2st/metrics.py": "1e6b6187ea96f4ac07ca2752509362ca9d22428f25bf538d9c3625eb60ddcd03",
+    "src/he2st/models.py": "cb00115014d58a6fa92e490d84052f83989f86e3a630f3af5606cd78c0289b3a",
+    "src/he2st/preprocessing.py": "2e06511baf28ca02295142b8b8cb64fe55ff7fc80ad928adaa83d7ea57ed7bae"
+  }
+}

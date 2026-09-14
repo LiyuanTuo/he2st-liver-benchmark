@@ -1,0 +1,39 @@
+{
+  "selected": "new_weight_0.25",
+  "fresh_predictions": {
+    "resnet18_ema": {
+      "max_absolute_difference": 0.0,
+      "fresh_checkpoint_reinference": true
+    },
+    "efficientnet_b0_ema": {
+      "max_absolute_difference": 0.0,
+      "fresh_checkpoint_reinference": true
+    },
+    "resnet18_spatial": {
+      "max_absolute_difference": 0.0,
+      "fresh_checkpoint_reinference": true
+    }
+  },
+  "all_candidates_recomputed": true,
+  "spatial_blocks": 24,
+  "bootstrap_repeats": 300,
+  "CI95": {
+    "HEG200": [
+      0.1806733039354583,
+      0.27651396263392086
+    ],
+    "HEG50": [
+      0.2489486035149406,
+      0.37215573021393294
+    ],
+    "delta_HEG200_vs_previous": [
+      0.000933187944805844,
+      0.007727200178638697
+    ],
+    "delta_HEG50_vs_previous": [
+      -0.0036681773585058516,
+      0.009144001713048168
+    ]
+  },
+  "limitation": "Conditional on this one slide; does not quantify independent-patient uncertainty or repeated development bias."
+}

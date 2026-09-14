@@ -1,0 +1,98 @@
+{
+  "resnet18_ema": {
+    "selection": {
+      "config_sha256": "9f72deb50e4ba92880873af0b863e92c01a6731a7f86d8913aa35ea59994a321",
+      "epoch": 8,
+      "weights": "raw",
+      "tta": true,
+      "validation": {
+        "HEG200": 0.3302770729321789,
+        "HEG50": 0.460176334475386,
+        "MAE": 0.3297359049320221,
+        "defined_genes": 200
+      },
+      "tta_candidates": {
+        "False": {
+          "HEG200": 0.32660966139709463,
+          "HEG50": 0.4533186136432294,
+          "MAE": 0.3345434069633484,
+          "defined_genes": 200
+        },
+        "True": {
+          "HEG200": 0.3302770729321789,
+          "HEG50": 0.460176334475386,
+          "MAE": 0.3297359049320221,
+          "defined_genes": 200
+        }
+      },
+      "locked_unix": 1789332472.6731029,
+      "test_RNA_read": false
+    },
+    "epochs_run": 18,
+    "training_seconds": 369.523988294
+  },
+  "efficientnet_b0_ema": {
+    "selection": {
+      "config_sha256": "4a3d9f2e67d83d7d60df94a863af4fe7ac2af54cdf0be95d0c569fd064a83fed",
+      "epoch": 11,
+      "weights": "raw",
+      "tta": true,
+      "validation": {
+        "HEG200": 0.34390374840979104,
+        "HEG50": 0.477913857954419,
+        "MAE": 0.33598029613494873,
+        "defined_genes": 200
+      },
+      "tta_candidates": {
+        "False": {
+          "HEG200": 0.33493854183174876,
+          "HEG50": 0.46958634556355205,
+          "MAE": 0.336137980222702,
+          "defined_genes": 200
+        },
+        "True": {
+          "HEG200": 0.34390374840979104,
+          "HEG50": 0.477913857954419,
+          "MAE": 0.33598029613494873,
+          "defined_genes": 200
+        }
+      },
+      "locked_unix": 1789333295.732885,
+      "test_RNA_read": false
+    },
+    "epochs_run": 21,
+    "training_seconds": 837.272107592
+  },
+  "resnet18_spatial": {
+    "selection": {
+      "config_sha256": "74b816727c8e22c960524071ea73a8444df6b732e6439cc7745c89c9277a5763",
+      "epoch": 8,
+      "weights": "raw",
+      "tta": false,
+      "validation": {
+        "HEG200": 0.31999979576825055,
+        "HEG50": 0.4409568574023313,
+        "MAE": 0.33713895082473755,
+        "defined_genes": 200
+      },
+      "tta_candidates": {
+        "False": {
+          "HEG200": 0.31999979576825055,
+          "HEG50": 0.4409568574023313,
+          "MAE": 0.33713895082473755,
+          "defined_genes": 200
+        },
+        "True": {
+          "HEG200": 0.31991143473130906,
+          "HEG50": 0.4385976916032614,
+          "MAE": 0.336250364780426,
+          "defined_genes": 200
+        }
+      },
+      "locked_unix": 1789333667.649982,
+      "test_RNA_read": false
+    },
+    "epochs_run": 18,
+    "training_seconds": 366.76071183199997
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "spots": 2265,
+  "genes": 200,
+  "components": 6,
+  "max_prediction_difference": 0.0,
+  "checkpoint_only_inference": true,
+  "test_RNA_used": false
+}
