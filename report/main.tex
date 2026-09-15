@@ -3,6 +3,7 @@
 \usepackage{amsmath,amssymb,booktabs,longtable,graphicx,float,array,tabularx}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{caption,subcaption,fancyhdr,enumitem}
+\usepackage[section]{placeins}
 \usepackage[unicode,colorlinks=true,linkcolor=MidnightBlue,citecolor=MidnightBlue,urlcolor=MidnightBlue]{hyperref}
 \usepackage{bookmark}
 \usepackage{xurl}
@@ -21,6 +22,7 @@
 \newcommand{\MAE}{\operatorname{MAE}}
 \newcommand{\code}[1]{\nolinkurl{#1}}
 \begin{document}
+\hypersetup{pageanchor=false}
 \begin{titlepage}
 \centering
 \vspace*{1.1cm}
@@ -46,6 +48,7 @@
 \end{minipage}
 \end{titlepage}
 \pagenumbering{Roman}
+\hypersetup{pageanchor=true}
 \section*{摘要}
 \addcontentsline{toc}{section}{摘要}
 利用苏木精--伊红（\HE）染色图像预测空间基因表达，有助于研究组织形态与分子表型之间的关联。本研究在 GSE240429 的四张人肝连续切片上，建立固定训练、验证和测试划分，比较 ResSAT、GenAR、Stem、ST-Net、BLEEP 及图像回归基线，并设计多尺度 ContextFusion 模型与验证集选定的集成策略。基因面板仅根据训练切片的平均表达选择，包含 200 个高表达基因（HEG200）和其中排名前 50 的固定子集（HEG50）；所有主结果均使用相同、未经 PCA/Harmony 重建的测试真值。
@@ -56,6 +59,8 @@ ContextFusion 通过共享卷积编码器融合三个图像视野。最终方案
 
 \noindent\textbf{关键词：}空间转录组；组织学图像；高表达基因；多尺度学习；集成学习；Pearson相关系数
 \tableofcontents
+\clearpage
+\listoffigures
 \clearpage\pagenumbering{arabic}
 
 \section{研究目标与问题定义}
@@ -75,6 +80,8 @@ ContextFusion 通过共享卷积编码器融合三个图像视野。最终方案
 \section{数据与固定评测协议}
 \subsection{数据来源和划分}
 数据来自 GEO GSE240429，表达与 spot 坐标使用 BLEEP 官方发布的数据文件\cite{geo,bleep}。四张切片属于供体 C73，按完整切片划分，见表\ref{tab:split}。这是同供体跨切片实验；连续切片不等于独立患者样本。
+
+\textbf{原始数据研究与预测方法应分别署名。}GEO 将该系列关联到 Andrews 等发表于 \textit{Journal of Hepatology} 的健康及原发性硬化性胆管炎（PSC）人肝免疫景观研究\cite{andrews}。该研究的目的在于单细胞、单核和空间转录组的生物学分析，不是提出本文比较的 \HE 到表达预测网络。BLEEP 是随后利用这些切片建立预测任务的方法与数据整理来源；不能把 GSE240429 称为 BLEEP 新采集的数据。
 \begin{table}[H]\centering
 \caption{固定划分。模型拟合及选择不使用 D1 RNA。}\label{tab:split}
 \begin{tabular}{lrrl}\toprule
@@ -86,6 +93,12 @@ C73\_D1&2265&GSM7697871&固定测试\\\bottomrule
 \end{tabular}
 \end{table}
 训练总计 4727 个 spots。固定 D1 曾在多轮研发中被反复报告，因此应视为反复使用的开发基准，而不能描述为从未查看过的最终外部测试。本轮“先锁定后评价”只约束本批新方案的选择流程。
+
+\begin{figure}[htbp]\centering
+\includegraphics[width=.9\textwidth]{data_overview.pdf}
+\caption[四张人肝切片与完整切片划分]{四张实际人肝切片的 \HE 缩略图及完整切片划分。图像来自本地 GEO 下载文件；缩略图用于展示组织外形和染色差异，不用于定量比较实际组织面积。切片间可见形态相近，但染色和取样位置并不完全相同。}\label{fig:data}
+\end{figure}
+图\ref{fig:data}说明，训练、验证和测试并非同一图像的随机图块混合。完整切片划分能减少局部相邻图块跨集合的直接共享，但同一供体的连续切片仍然有关联，不能替代独立患者验证。
 
 \subsection{高表达基因选择与列顺序}
 对训练切片全转录组计数 $c_{ig}$ 计算
@@ -99,6 +112,12 @@ z_{ig}=\log\left(1+10^4\frac{c_{ig}}{\sum_{h\in\mathcal G_{\rm all}}c_{ih}}\righ
 \begin{center}\footnotesize\ttfamily
 4dab411dd5565b34312fd10b927ad4c806408477c29ede1eea30259b035f0181
 \end{center}
+
+\begin{figure}[htbp]\centering
+\includegraphics[width=\textwidth]{gene_panel.pdf}
+\caption[训练集高表达基因面板与检出率]{冻结 HEG200 的训练表达排名及检出率。阴影为固定 HEG50，曲线只使用 A1+B1 的统计量。右图的检出率表示基因计数大于零的训练 spots 比例，未按测试 PCC 筛选。}\label{fig:panel}
+\end{figure}
+图\ref{fig:panel}中，200 个基因的训练检出率最低约为 94.20\%，中位数约为 98.48\%。因此当前主面板并非由极稀疏的低表达基因构成。高表达能减轻部分稀疏计数问题，却不保证该基因在不同位置的变化能从组织形态中辨认。
 
 \subsection{表达目标与评价指标}
 选基因使用全转录组分母；统一评测使用固定 HEG200 面板分母：
@@ -115,14 +134,76 @@ r_g=\frac{\sum_i(y_{ig}-\bar y_g)(\hat y_{ig}-\overline{\hat y}_g)}
 \end{equation}
 主指标为 HEG200 宏平均，HEG50 为固定高表达子集指标；二者均不是每个 spot 内跨基因 PCC。常量列的相关系数未定义，应保留 NaN 并报告有效数量；本批各候选 200 个基因的 PCC 均有效。另计算 $\MAE=(n|\mathcal G|)^{-1}\sum_{i,g}|\hat y_{ig}-y_{ig}|$。PCC 对逐基因平移与正缩放不敏感，因此相关性改善不保证数值误差同步改善。
 
+\begin{figure}[htbp]\centering
+\includegraphics[width=\textwidth]{protocol_flow.pdf}
+\caption[统一实验的训练、选择、推理及计分流程]{统一实验的数据流。上排为训练和 C1 选择，下排为 D1 的冻结推理与计分；D1 RNA 只在末端用于评测。选基因时使用全转录组分母，训练和评测目标使用固定 HEG200 分母，这两步的用途不同。}\label{fig:protocol}
+\end{figure}
+
 \section{基线方法与 ContextFusion}
 \subsection{统一人肝适配的性质}
 Image Ridge、MLP 为图像特征回归基线；BLEEP 利用图像与表达的嵌入对应关系；ResSAT 引入空间编码和 spot 交互；GenAR 采用自回归生成；Stem 采用条件扩散；ST-Net 使用卷积图像回归。本文比较的是本地统一人肝任务的适配实现，不是宣称完整复现所有作者的原始硬件、病理基础模型特征与训练预算。尤其 GenAR/Stem 的原特征和模型设置与本地资源存在差异，其低分不能推广为原方法普遍失效。历史适配代码、论文来源与限制分别保存在 \code{scripts/}、\code{papers/README.md} 和历史诊断文档。
 
+以下五幅架构图用于说明\textbf{原作者的方法设计}，保留原图中的基因数、网络尺寸和模块名称；本地统一任务的输出维度为 200。图中的原始参数不是本项目所有实验实际使用的参数。图源及提取记录见 \code{report/figures/sources.json}，第三方图的权利归原作者或出版方。
+
+\subsection{ST-Net：从局部形态直接回归表达}
+\begin{figure}[htbp]\centering
+\includegraphics[width=.88\textwidth]{stnet_arch.png}
+\caption[ST-Net 原论文架构]{ST-Net 原论文 Fig. 1a 的网络流程\cite{stnet}，沿用阶段汇报素材。一个 spot 的局部图像经卷积编码为特征，再经全连接层输出多基因表达。原图的 250 基因属于原研究设置，本项目适配为固定 200 基因。}\label{fig:stnet}
+\end{figure}
+图\ref{fig:stnet}提供了直接的监督学习参照：用共享图像特征同时回归多个基因。其优点是推理简单、无需为每个基因训练独立网络；限制是单图块可见范围有限，较远的组织上下文不能直接进入回归头。
+\FloatBarrier
+
+\clearpage
+\subsection{BLEEP：跨模态对齐与参考表达检索}
+\begin{figure}[H]\centering
+\includegraphics[width=.88\textwidth]{bleep_arch.png}
+\caption[BLEEP 原方法架构]{BLEEP 官方方法总览\cite{bleep}，沿用阶段汇报中来自作者仓库的图。左侧通过配对图像与表达的对比损失对齐嵌入空间；右侧将查询图像映射到该空间，并检索参考表达；底部组合参考 profiles 形成预测。}\label{fig:bleep}
+\end{figure}
+BLEEP 将问题部分转化为参考库中的相似样本检索（图\ref{fig:bleep}）。它能复用训练样本的多基因表达结构，但依赖嵌入对齐质量和参考库对测试组织的覆盖程度。推理使用的参考 RNA 来自训练样本，不能混入测试 RNA。本地采用冻结 ResNet18 特征的适配，未完整重跑原论文端到端 ResNet50 的训练预算，故 0.0915/0.1571 是本地适配成绩。
+\FloatBarrier
+
+\clearpage
+\subsection{ResSAT：图像、坐标与 spot 间交互}
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{ressat_arch.png}
+\caption[ResSAT 原论文架构]{ResSAT 2026 接收稿 Fig. 9（PDF 第25页）的完整架构\cite{ressat}。图像编码与 Fourier 坐标编码分别形成表示，FiLM 调制后融合，由跨 spots 的 self-attention 学习交互。图源直接提取自本地论文，非本项目自绘网络。}\label{fig:ressat}
+\end{figure}
+图\ref{fig:ressat}显示了 ResSAT 相对局部 CNN 回归的主要变化：模型不仅看当前 spot 的组织形态，还把位置与其他 spots 的表示引入预测。空间关系有助于表达连续的组织结构，但其作用取决于组织、目标预处理和跨切片泛化。本地人肝适配 PCC 为 0.1226/0.1846；与论文鼠脑高分的口径差异在后文单独说明。
+\FloatBarrier
+
+\clearpage
+\subsection{GenAR：由粗到细的自回归表达生成}
+\begin{figure}[H]\centering
+\includegraphics[width=.93\textwidth]{genar_arch.png}
+\caption[GenAR 原论文完整架构]{GenAR 预印本 Fig. 1（PDF 第4页）的完整架构\cite{genar}。(a) 基因分层排序，(b) 图像与位置条件融合，(c) 因果 Transformer 从较粗尺度逐步生成细尺度表达。底部已生成的粗尺度表达作为条件，送入下一尺度的预测。}\label{fig:genar}
+\end{figure}
+GenAR 的多尺度指的是\textbf{基因表达生成的粒度}，与本文 ContextFusion 的三个图像视野不是同一概念。图\ref{fig:genar}中，已生成的粗粒度表达为后续更细粒度预测提供条件；图像和位置特征约束这一生成过程。这种设计可刻画基因间结构，但基础模型特征、token 化和较大训练预算都会影响结果。本地小规模适配的 0.0492/0.1310 不能代表原论文配置的性能上限。
+\FloatBarrier
+
+\clearpage
+\subsection{Stem：图像条件下的扩散生成}
+\begin{figure}[H]\centering
+\includegraphics[width=.9\textwidth]{stem_arch.png}
+\caption[Stem 原方法架构]{Stem 官方 Fig. 1\cite{stem}，使用阶段汇报中的作者仓库素材。上半部分为训练：图像条件与基因表示进入 DiT 块，学习噪声预测；下半部分为推理：从噪声出发，在组织图像条件下逐步采样表达。}\label{fig:stem}
+\end{figure}
+Stem 通过学习条件分布来生成表达（图\ref{fig:stem}），与确定性回归或参考库检索不同。潜在优势是刻画复杂的表达依赖；代价包括扩散采样成本及对病理图像特征的依赖。本地没有完整使用论文 UNI/CONCH 特征条件，适配成绩 0.0668/0.1183 应结合这一差异解释。生成模型的名称或复杂度本身并不保证当前固定面板的宏平均 PCC 更高。
+\FloatBarrier
+
+\clearpage
 \subsection{三尺度网络}
 以全分辨率 spot 坐标分别裁取 $224,896,1792$ 像素的正方形区域，越界补白，较大视野经双线性插值缩放为 $224\times224$。对应视野约为 $58,231,461\,\mu$m。图像排列为 $[B,S,C,H,W]$，其中 $S=3$；坐标用于裁图，最终 CNN 不使用测试表达构图。
 
 共享 ResNet18 编码器输出每视野 512 维特征，EfficientNet-B0 输出 1280 维特征；三尺度特征拼接后，经 LayerNorm、Dropout(0.3)、256 维线性层、GELU、Dropout(0.2) 与 200 维线性输出层，预测全部固定基因。
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{contextfusion_arch.pdf}
+\caption[ContextFusion 三尺度网络结构]{本项目 ContextFusion 的实际网络结构，自绘并依据 \code{src/he2st/models.py} 核对。三个视野共享同一个 CNN 编码器，拼接后联合回归 200 个标准化目标，再用训练均值和标准差还原到面板 log 表达单位。}\label{fig:context}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{multiscale_patches.pdf}
+\caption[同一 spot 的实际三尺度图像输入]{同一 A1 spot 的实际三尺度输入。按距 A1 坐标中位数最近的 spot 固定选择，未查看表达或预测分数。三张图最终像素尺寸相同，但实际组织视野不同；扩大视野会增加上下文，也降低细胞细节的相对分辨率。}\label{fig:patches}
+\end{figure}
+图\ref{fig:context}与图\ref{fig:patches}对应模型设计及其真实输入。局部视野保留细胞与染色细节，大视野补充组织区室信息；共享编码器减少参数数量。三尺度融合的目的不是提高图像分辨率，而是让模型同时观察不同范围的形态信息。
 
 \subsection{训练和选择}
 训练标签逐基因使用训练均值与标准差标准化，标准差下限设为 0.1。损失为标准化 MSE 加批内逐基因相关损失：
@@ -135,6 +216,12 @@ Image Ridge、MLP 为图像特征回归基线；BLEEP 利用图像与表达的�
 新增三组方案使用 ImageNet 初始化、种子 42，最多 45 轮、patience 10、2 轮 warmup 后余弦学习率下降，最低学习率为初始值的 10\%。编码器/头初始学习率分别为 $3\times10^{-5}$/$3\times10^{-4}$，权重衰减 0.02，梯度范数上限 5。ResNet18 批大小为 24，EfficientNet-B0 为 16。增强包括旋转、翻转与同一 spot 各视野共享的轻度颜色变化；GPU 计算使用 BF16 autocast。训练维护衰减上限 0.99 的 EMA，验证集比较原权重和 EMA 权重，再比较单次与四旋转平均推理。实际三组分别运行 18、21、18 轮，训练循环耗时约 370、837、367 秒，不包含所有数据准备和后处理时间。
 
 训练标签平滑组将同一训练切片最近 6 个其他 spots 的均值与自身标签按 $0.2/0.8$ 混合，仅改变训练监督。验证与测试真值始终保持式\eqref{eq:target}。所有模型检查点与推理增强均按 C1 HEG200 PCC 选择。
+
+\begin{figure}[htbp]\centering
+\includegraphics[width=\textwidth]{validation_curves.pdf}
+\caption[新增模型的逐轮验证集学习曲线]{新增三个模型逐轮 C1 HEG200 PCC。实线为当前权重，虚线为 EMA；曲线来自实际训练日志，均为该轮单次推理。检查点选定后另比较四旋转 TTA，因此曲线峰值不必等于最终表格中的 TTA 成绩。}\label{fig:curves}
+\end{figure}
+图\ref{fig:curves}中，EMA 在部分训练阶段有优势，但最终全局选择没有保留 EMA 权重；继续训练也未持续改善 C1。该现象支持按验证集早停，不能仅凭训练轮数增加就推断泛化将提升。
 
 \section{集成学习：组成、权重与工作机制}
 \subsection{两级均值与验证集权重选择}
@@ -152,7 +239,7 @@ C1 最终选择 $\alpha=0.25$，故
 所有平均在相同预测 log 表达空间进行，既不是原始 counts 平均，也不是先对模型的 PCC 分数平均。该方法是随机种子与不同训练方案的输出加权平均；没有 bootstrap 重采样训练，也没有使用测试真值训练 stacking 元模型。式中的权重没有按基因分别优化。
 \begin{figure}[H]\centering
 \includegraphics[width=\textwidth]{ensemble_method.pdf}
-\caption{最终集成的信息流。测试阶段只输入图像、坐标及固定面板元数据；C1 上选择的权重在 D1 推理时冻结。}
+\caption[六模型加权集成的信息流]{最终集成的信息流。测试阶段只输入图像、坐标及固定面板元数据；C1 上选择的权重在 D1 推理时冻结。}
 \end{figure}
 \begin{table}[H]\centering\small
 \caption{六个组成模型及最终权重。原权重/EMA选择的最终结果均为原权重。}
@@ -170,6 +257,11 @@ C1 最终选择 $\alpha=0.25$，故
 
 对固定 D1 的六个模型，将所有 spot--gene 残差展平后计算相关系数，非对角值约为 0.974--0.992。该描述性结果提示残差高度共享，符合增益有限的现象；但共同的测量噪声、基因尺度及偏差也会影响这个统计量，不能将其直接解释为独立误差来源。残差分析是结果锁定后的诊断，未用于选权重。完整矩阵保存在 \code{ensemble_residual_correlation.csv}。
 
+\begin{figure}[htbp]\centering
+\includegraphics[width=.74\textwidth]{residual_correlation.pdf}
+\caption[六模型在固定测试集上的残差相关性]{六模型在 D1 的残差相关矩阵。每个残差为预测减实测值，展平所有 spot--gene 对后计算相关；色标聚焦于 0.97--1.00，显示的是高相关范围内的细微差异。此图为锁定后的描述性诊断，不作为权重选择依据。}\label{fig:residual}
+\end{figure}
+
 \section{实验结果}
 \subsection{统一基准结果}
 表\ref{tab:baseline}保留七种基线、前轮消融与最终集成。相对原 ST-Net，最终 HEG200/HEG50 PCC 增加约 0.0872/0.1202；相对已经改进的原三种子集成，增益只有 0.0042/0.0024。这两个参照不能混为一谈。
@@ -179,7 +271,7 @@ C1 最终选择 $\alpha=0.25$，故
 \end{table}
 \begin{figure}[H]\centering
 \includegraphics[width=.88\textwidth]{comparison.pdf}
-\caption{固定面板宏平均 PCC。全随机单模型 HEG50 为 0.3278，高于最终集成的 0.3180；因此不能声称集成全面优于所有单模型。选择规则始终是 C1 HEG200，而不是 D1 HEG50。}
+\caption[固定高表达面板的宏平均 PCC 比较]{固定面板宏平均 PCC。全随机单模型 HEG50 为 0.3278，高于最终集成的 0.3180；因此不能声称集成全面优于所有单模型。选择规则始终是 C1 HEG200，而不是 D1 HEG50。}
 \end{figure}
 
 \subsection{新方案与权重消融}
@@ -191,6 +283,25 @@ C1 最终选择 $\alpha=0.25$，故
 新增 EfficientNet-B0 是三个新单模型中表现较好的一个，但没有超过原三种子集成。标签平滑组的 D1 HEG200 从对应非平滑组的 0.2182 降至 0.2010，HEG50 从 0.2947 降至 0.2635。三个新模型均未选中 EMA。因学习率、增强和正则化共同发生变化，跨轮结果不能单独归因于 EMA；平滑与非平滑 ResNet18 之间才是较直接的单因素对照。
 
 最终 MAE 为 0.4274，略差于原三种子集成的 0.4256；MSE 同样从约 0.4207 变为 0.4212。新旧组合带来的主要收益是部分空间相关性改善，不是所有误差同时降低。
+
+\subsection{补充实验：预测的空间平滑是否有帮助}
+本次报告修订补做一个计算成本较低的对照，检验局部预测波动能否通过空间邻域平均减小。以冻结六模型预测 $\hat y_i$ 为输入，定义
+\begin{equation}
+\hat y_i^{(k,\alpha)}=(1-\alpha)\hat y_i+\frac{\alpha}{k}\sum_{j\in\mathcal N_k(i)}\hat y_j,
+\end{equation}
+其中 $\mathcal N_k(i)$ 是按坐标选取、明确排除自身的 $k$ 个近邻。提前固定邻域大小为 6、12、24，平滑权重为 0.25、0.5、0.75、1，加上不平滑的对照共 13 个候选。模型、基因面板和真值均保持不变；仅在 C1 选择宏平均 HEG200 最大的候选，并在读取 D1 文件前写入选择记录。
+\begin{figure}[htbp]\centering
+\includegraphics[width=.85\textwidth]{prediction_smoothing.pdf}
+\caption[补充对照：预测空间平滑的验证结果]{新增预测空间平滑对照的全部 C1 结果。横轴是邻域预测占比，零表示原始六模型输出。所有非零平滑候选均低于不平滑对照；没有根据 D1 另选邻域或平滑强度。}\label{fig:smoothing}
+\end{figure}
+图\ref{fig:smoothing}中 C1 仍选择 $\alpha=0$（HEG200 为 0.3665），因此 D1 保持 0.2343/0.3180，MAE 为 0.4274。该负结果说明，所测试范围的空间平均不足以改善当前模型；进一步模糊预测可能同时损失有用的局部变化。它不证明所有空间建模无效，也不等同于平滑实测真值后取得更高 PCC。计划、全部验证结果与选择记录保存在 \code{benchmarks/liver/report_spatial_ablation/}。
+
+\subsection{逐基因分布与集成改善的范围}
+\begin{figure}[htbp]\centering
+\includegraphics[width=\textwidth]{per_gene_diagnostics.pdf}
+\caption[固定面板的逐基因 PCC 分布与变化]{D1 的固定面板逐基因诊断。左：全部 HEG200 的 PCC 分布，区分 HEG50 与其余150基因；中：原集成与最终集成的配对比较，虚线为相等；右：训练平均表达与最终测试 PCC。中、右图橙色表示固定 HEG50。所有基因保留，未据测试表现重新选面板。}\label{fig:pergene}
+\end{figure}
+在图\ref{fig:pergene}中，最终集成相对原集成改善了 151 个基因，另有 49 个下降，反映出较广泛但较小的变化。200 个基因中只有 1 个 PCC 高于 0.5，固定 HEG50 中没有基因超过 0.5；这些计数是测试后的描述，不用于建立新的“易预测”面板。训练平均表达与 D1 PCC 的 Spearman 相关约为 0.555，但这是关联统计，不能解释为提高表达量本身会使模型预测更准确。
 
 \subsection{不确定性与空间示例}
 将 D1 坐标范围划分为 $5\times5$ 网格，得到 24 个非空空间块。以块为单位有放回抽样 300 次，每次对新旧预测使用相同抽样索引，计算配对增益的百分位区间，结果见表\ref{tab:ci}。该方法保留部分局部依赖，但不能替代跨患者重复试验，也未覆盖模型选择和多轮研发的全部不确定性。
@@ -206,7 +317,7 @@ C1 最终选择 $\alpha=0.25$，故
 HEG200 增益区间在本切片条件下高于零，但绝对幅度很小；HEG50 增益区间跨过零，应将其描述为不稳定的小幅变化。
 \begin{figure}[H]\centering
 \includegraphics[width=\textwidth]{spatial_examples.pdf}
-\caption{ALB 与 HP 的空间预测。沿用前轮已展示的基因作为示例，不据本轮测试 PCC 选择。每个基因的所有方法共用真值 1\%--99\% 分位色标，范围外颜色截断；PCC 仍使用完整未截断数值。个别示例不替代固定面板统计。}
+\caption[ALB 与 HP 的实测和预测空间表达]{ALB 与 HP 的空间预测。沿用前轮已展示的基因作为示例，不据本轮测试 PCC 选择。每个基因的所有方法共用真值 1\%--99\% 分位色标，范围外颜色截断；PCC 仍使用完整未截断数值。个别示例不替代固定面板统计。}
 \end{figure}
 
 \section{低 PCC 的原因与已经完成的纠正}
@@ -222,6 +333,10 @@ HEG200 增益区间在本切片条件下高于零，但绝对幅度很小；HEG5
 
 \subsection{原论文数值为什么不能直接对照}
 ResSAT 原文中的约 0.6577、0.6980 涉及不同组织、基因面板及预处理/目标条件\cite{ressat}。本地前轮鼠脑重建目标实验，SA/SP 的 2000 HVG PCC 约为 0.6506/0.6667；相应高表达50基因指标约为 0.8803/0.8930。这说明论文式口径下可得到更高数值，但不是人肝未重建 HEG200 的成绩。该复现使用单种子，部分预处理存在近似，也不应称为所有原文实验的完整复现。
+
+更接近当前组织来源的参照是使用同一批人肝切片的 BLEEP 与后续单图块基线研究\cite{bleep,singlepatch}。BLEEP 原文 Table 1 的 HEG50 平均 PCC 为 $0.175\pm0.016$，其中 ST-Net 为 $0.126\pm0.005$；后续 EfficientNet-B0 单图块研究报告 HEG50 为 0.310。这些论文采用 slice 3（C1）测试、其余三张训练，并沿用四切片 HVG 并集及 Harmony 处理流程，与本文 A1+B1/C1/D1 和训练集 HEG200 选择不同。因此它们是同数据来源的背景参照，不能与本文 0.3180 直接作优劣排名，也不能据其差异宣称本项目优于原论文。
+
+BLEEP 原文还展示过 CYP3A4 等个别基因高于 0.5 的 PCC；那是特定基因的结果，不是全部 HEG50 的宏平均。原始生物学数据论文、基于这些数据提出的预测方法，以及本文统一适配实验，是三个需要明确区分的层次。
 
 \section{代码、结果与交付的可复现性}
 \subsection{环境与入口}
@@ -262,5 +377,7 @@ python run.py evaluate \
 \bibitem{genar} Ouyang J, Wang Y, Gao Y, et al. GenAR: Next-Scale Autoregressive Generation for Spatial Gene Expression Prediction. arXiv:2510.04315, 2025. 本地研究同时参考后续正式发表信息与作者代码；此处对应已阅读的预印本版本。\url{https://arxiv.org/abs/2510.04315}.
 \bibitem{stem} Zhu S, Zhu Y, Tao M, Qiu P. Diffusion Generative Modeling for Spatially Resolved Gene Expression Inference from Histology Images. \textit{ICLR}, 2025. \url{https://github.com/SichenZhu/Stem}.
 \bibitem{geo} NCBI Gene Expression Omnibus. GSE240429: human liver spatial transcriptomics data. 数据访问与下载记录见项目数据说明。\url{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE240429}.
+\bibitem{andrews} Andrews T S, Nakib D, Perciani C T, et al. Single-cell, single-nucleus, and spatial transcriptomics characterization of the immunological landscape in the healthy and PSC human liver. \textit{Journal of Hepatology}, 2024, 80(5):730--743. \url{https://doi.org/10.1016/j.jhep.2023.12.023}.
+\bibitem{singlepatch} Jang H, Shin H, et al. From histology to spatial transcriptomics: establishing a lightweight single-patch baseline. \textit{BMC Bioinformatics}, 2026, 27:168. \url{https://doi.org/10.1186/s12859-026-06447-7}.
 \end{thebibliography}
 \end{document}

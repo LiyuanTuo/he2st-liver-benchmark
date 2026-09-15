@@ -1,0 +1,11 @@
+{
+  "figure_context": "post-hoc diagnostics; all fixed genes retained",
+  "genes_above_0.5_HEG200": 1,
+  "genes_above_0.5_HEG50": 0,
+  "improved_over_prior": 151,
+  "worse_than_prior": 49,
+  "train_expression_vs_D1_PCC_spearman": 0.5545203630090753,
+  "HEG200_detection_min": 0.9420351174106198,
+  "HEG200_detection_median": 0.984768352020309,
+  "multiscale_example_A1_barcode": "CTGTGCAGGGTAGGTC-1"
+}

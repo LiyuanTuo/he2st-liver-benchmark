@@ -56,3 +56,5 @@ dist/
 .ipynb_checkpoints/
 Thumbs.db
 .DS_Store
+# LaTeX list of figures is regenerated at build time.
+report/*.lof

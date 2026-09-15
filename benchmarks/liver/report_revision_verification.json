@@ -1,0 +1,18 @@
+{
+  "report_pages": 23,
+  "numbered_figures": 17,
+  "missing_figure_files": [],
+  "latex_final_pass_warnings": [],
+  "short_or_empty_pages": [],
+  "supplemental_metric_matches_scipy": true,
+  "neighbor_self_exclusion_with_tied_coordinates": true,
+  "identity_and_mixing_verified": true,
+  "supplemental_selected_alpha": 0.0,
+  "historical_core_and_weights_changed": false,
+  "reviewed_renderings": [
+    "method architectures",
+    "ContextFusion and real crops",
+    "spatial smoothing control"
+  ],
+  "pdf_sha256": "417e5603179412b2fe9c26fd57cbd7467843ee98d9647c2a2be2c6198d9d05ee"
+}

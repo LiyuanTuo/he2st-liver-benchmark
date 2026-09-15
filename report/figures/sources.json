@@ -1,0 +1,54 @@
+[
+  {
+    "figure": "genar_arch.png",
+    "source": "papers/GenAR_2026_Medical_Image_Analysis_arXiv.pdf",
+    "pdf_page_1based": 4,
+    "crop_points": [
+      108,
+      79,
+      503,
+      347
+    ],
+    "source_sha256": "bb153581901fcd6592e533a00b0e0c6c6c8bf82bae48e9df5acddb700ec948a5",
+    "citation_key": "genar",
+    "url": "https://arxiv.org/abs/2510.04315"
+  },
+  {
+    "figure": "ressat_arch.png",
+    "source": "papers/ResSAT.pdf",
+    "pdf_page_1based": 25,
+    "crop_points": [
+      100,
+      61,
+      513,
+      273
+    ],
+    "source_sha256": "a091be73bd57065dc9032b9bb17cb61439383236525d27fbf0b7e0634eb0690f",
+    "citation_key": "ressat",
+    "url": "https://doi.org/10.1186/s13059-026-04168-x"
+  },
+  {
+    "figure": "stnet_arch.png",
+    "source": "figures/ppt_assets/stnet_arch.png",
+    "source_sha256": "ff105afab67d95b1a5ba33e93649babbcead5458e486fec6bf45533a597d7f99",
+    "citation_key": "stnet",
+    "url": "https://doi.org/10.1038/s41551-020-0578-x",
+    "extraction": "Existing stage presentation asset; ST-Net Fig. 1a, BLEEP overview, Stem Fig. 1"
+  },
+  {
+    "figure": "bleep_arch.png",
+    "source": "figures/ppt_assets/bleep_arch.png",
+    "source_sha256": "0b70110998bf651dd6781c5589d8c1887f573686103162fc7b2845282760f3f6",
+    "citation_key": "bleep",
+    "url": "https://github.com/bowang-lab/BLEEP",
+    "extraction": "Existing stage presentation asset; ST-Net Fig. 1a, BLEEP overview, Stem Fig. 1"
+  },
+  {
+    "figure": "stem_arch.png",
+    "source": "figures/ppt_assets/stem_arch.png",
+    "source_sha256": "a86f3efe1a12c88bffb0b25600618c5e64a98452cb1fb0589fc6f18bc251130d",
+    "citation_key": "stem",
+    "url": "https://github.com/SichenZhu/Stem",
+    "extraction": "Existing stage presentation asset; ST-Net Fig. 1a, BLEEP overview, Stem Fig. 1"
+  }
+]

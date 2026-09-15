@@ -1,0 +1,15 @@
+{
+  "reference_D1": {
+    "HEG200": 0.23432192418049155,
+    "HEG50": 0.3179922544318408,
+    "MAE": 0.427432656288147
+  },
+  "selected_D1": {
+    "HEG200": 0.23432192418049155,
+    "HEG50": 0.3179922544318408,
+    "MAE": 0.427432656288147
+  },
+  "selected_k": 0,
+  "selected_alpha": 0.0,
+  "interpretation": "Supplemental C1-selected control; no D1 search; historical main result preserved"
+}

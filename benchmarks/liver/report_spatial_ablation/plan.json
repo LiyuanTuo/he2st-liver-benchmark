@@ -1,0 +1,19 @@
+{
+  "reference": "frozen new_weight_0.25",
+  "k": [
+    6,
+    12,
+    24
+  ],
+  "alpha": [
+    0.25,
+    0.5,
+    0.75,
+    1.0
+  ],
+  "include_identity": true,
+  "selection": "maximum C1 HEG200; ties prefer identity then smaller k/alpha",
+  "D1_role": "evaluate identity and C1-selected candidate only",
+  "target_smoothing": false,
+  "retraining": false
+}

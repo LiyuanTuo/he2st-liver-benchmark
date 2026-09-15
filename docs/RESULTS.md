@@ -40,6 +40,14 @@
 - [全部候选指标](../benchmarks/liver/optimization_20260914.csv) · [全部逐基因 PCC](../benchmarks/liver/optimization_per_gene.csv) · [此前七基线及消融](../benchmarks/liver/baseline_20260913.csv)。
 - [训练前方案](../benchmarks/liver/optimization_plan.json) · [C1 选择记录](../benchmarks/liver/optimization_selection_locked.json)。选择记录先于本批 D1 RNA 评价写入，但不代表 D1 在项目历史中从未被查看。
 - 本地 `results/optimization_20260914/` 保留权重、完整历史、各候选预测和检查记录；`prediction_only.npz` 与 `predicted_log_expression.csv.gz` 是不含实测 RNA 的最终表达预测。
-- 仓库入口已统一为 `run.py`，核心代码放在 `src/he2st/`，参数放在 `configs/`。数据/权重/论文/PPT不进入 Git，历史编号脚本保留索引和原复现路径。
+- 仓库入口已统一为 `run.py`，核心代码放在 `src/he2st/`，参数放在 `configs/`。原始数据、权重和完整论文不进入 Git；正式报告及精选最终 PPT 已纳入，历史编号脚本保留索引和原复现路径。
 
 详细前轮诊断与论文口径核对见 [06 报告](06_LIVER_CONTEXT_IMPROVEMENT.md) 和 [05 报告](05_PCC_DIAGNOSIS.md)。运行方式见 [快速开始](QUICKSTART.md)。
+
+## 2026-09-15 图文修订与补充对照
+
+正式报告由 3 幅图扩充为 17 幅，补齐五种原方法、自建 ContextFusion、六模型集成及数据/结果分析图，并注明原方法图与本地适配的区别。GSE240429 的原始生物学研究（Andrews 等，2024）和 BLEEP 预测方法分别引用，同数据来源论文不与本项目跨协议排名。
+
+新增预测空间平滑实验提前固定近邻数 6/12/24 和混合权重 0.25/0.5/0.75/1，加上原输出共 13 个候选。只以 C1 HEG200 选择，所有非零平滑候选均不及原输出，最佳非零候选为 k=6、alpha=0.25，C1 为 0.3580，低于原来的 0.3665。选择保持原输出，D1 仍为 0.2343/0.3180。未在 D1 上搜索平滑参数，也未平滑真值。[计划和完整记录](../benchmarks/liver/report_spatial_ablation/)。
+
+固定面板训练检出率最低 94.20%、中位数 98.48%。最终集成相对原集成有 151 个基因的 PCC 上升、49 个下降；HEG200 中只有 1 个基因 PCC > 0.5，HEG50 中为 0 个。上述计数为结果锁定后的诊断，不用于挑选新面板。[数值来源](../benchmarks/liver/report_figure_diagnostics.json)。

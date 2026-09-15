@@ -8,6 +8,8 @@
 
 **正式交付：** [实验报告 PDF](report/main.pdf) · [LaTeX 源码](report/main.tex) · [最终 PPTX（11页）](presentation/final_report.pptx) · [演示 PDF](presentation/final_report.pdf)。
 
+报告现含 **17 幅图**，覆盖五种方法及自建网络架构、集成机制、真实输入和结果诊断，逐图附解释与来源。新增预测空间平滑对照未改善 C1，仍保留上述六模型结果；[修订与重建说明](report/README.md)。
+
 ## 快速开始
 
 使用已有的全局 Python 环境，在仓库根目录运行：

@@ -1,0 +1,11 @@
+{
+  "selected": {
+    "k": 0,
+    "alpha": 0.0,
+    "HEG200": 0.36647712020643447,
+    "HEG50": 0.5052154574820241,
+    "MAE": 0.3249622881412506
+  },
+  "D1_loaded_at_selection": false,
+  "validation_predictions_sha256": "abc8bffecb10980621bd30a682f1a14a5d02d77f951c34c3e224dcfeaa7f3f07"
+}

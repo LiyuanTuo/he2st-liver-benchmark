@@ -1,12 +1,12 @@
 {
-  "report_pages": 13,
+  "report_pages": 23,
   "presentation_pages": 11,
   "ppt_text_overflow": false,
   "latex_overfull_boxes": false,
   "credential_pattern_matches": [],
   "files": {
-    "report/main.tex": "eaba57006820081822035e00a26a95933221504a92ff1e1a0ae4bc80b50bf84c",
-    "report/main.pdf": "90989dc49e3c001a6279950495a040f88059dc60ee14ce820fe15803edaeb03a",
+    "report/main.tex": "eea70d055976477e92ed31e1aee5d3424bab34f91272ee2084518d06214d673d",
+    "report/main.pdf": "417e5603179412b2fe9c26fd57cbd7467843ee98d9647c2a2be2c6198d9d05ee",
     "presentation/final_report.pptx": "0c7ed28fb2c4b79351fe074ffbd52fc82c564abc8ef88ace3ba210d497b264b0",
     "presentation/final_report.pdf": "1550ed6b387ad86126d0864b71a1f9a44c4b7d927a5b40ee8c33dbcc7efbbebd",
     "benchmarks/liver/final_ensemble.json": "4a0cd654ec61027a4b6a5b5cf0056e77120b797c3eabd182a14047e558f90c72",
@@ -23,5 +23,25 @@
     "src/he2st/metrics.py": "1e6b6187ea96f4ac07ca2752509362ca9d22428f25bf538d9c3625eb60ddcd03",
     "src/he2st/models.py": "cb00115014d58a6fa92e490d84052f83989f86e3a630f3af5606cd78c0289b3a",
     "src/he2st/preprocessing.py": "2e06511baf28ca02295142b8b8cb64fe55ff7fc80ad928adaa83d7ea57ed7bae"
+  },
+  "report_figures": 17,
+  "report_figure_files_sha256": {
+    "data_overview.pdf": "5298219e4122a5bec85fc68b0205733909c41ee4ce9d100aad248b225fed4cca",
+    "gene_panel.pdf": "a5cca0d1f8ca5e269354ef0acd268d0eb15914575cd155b174ca6e9294727ff7",
+    "protocol_flow.pdf": "ecda56f9cc0563c6360ab7bc21682156051149e7ba564926b9a478859af5d271",
+    "stnet_arch.png": "ff105afab67d95b1a5ba33e93649babbcead5458e486fec6bf45533a597d7f99",
+    "bleep_arch.png": "0b70110998bf651dd6781c5589d8c1887f573686103162fc7b2845282760f3f6",
+    "ressat_arch.png": "f3ee2936da175b85cf39182c923868316d7967f43d4e2aff9be3f7ec0744e2bf",
+    "genar_arch.png": "612acbefeac0d0d4074cb76dbf436f5aec20e1756cab7bd0dd093dca1bc5590a",
+    "stem_arch.png": "a86f3efe1a12c88bffb0b25600618c5e64a98452cb1fb0589fc6f18bc251130d",
+    "contextfusion_arch.pdf": "75a0f4c6fc17115146749f38b26032652385ae92f501c7b7dc33e5ad4aea7099",
+    "multiscale_patches.pdf": "189411a284b3f0ba39d25e842c0961af387de453cbbb49aa7fb743ca3595f9df",
+    "validation_curves.pdf": "801e1753fb11afbcce184d18db6c1f8f3db33f4f7cc6c1ec0d5c0af0e81f07d4",
+    "ensemble_method.pdf": "4b0ad938f225b0511667c84c0998e19adb0e638c700194b4893e4dab39c430cd",
+    "residual_correlation.pdf": "21cefccef72fb766538f945502f8c1fdf4b29dc3178a3c2fd9df93fab279e465",
+    "comparison.pdf": "50a6c69cc11938b81d89995dcf144db71f5beafce7f892990829130adefe2f4f",
+    "prediction_smoothing.pdf": "73b5460f631e737caa9b8a105f80a9fbdbd553312077936e7559031802346d4c",
+    "per_gene_diagnostics.pdf": "944bf993f99e9839de9070493c9e115f05f521debf3c339d242b9c9784b4938c",
+    "spatial_examples.pdf": "32f97c5085955d7f019ba25e6a815537bab5f83cdf49389b39df4191df1656cc"
   }
 }
