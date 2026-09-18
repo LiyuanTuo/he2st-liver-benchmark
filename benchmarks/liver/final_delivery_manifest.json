@@ -1,12 +1,12 @@
 {
-  "report_pages": 23,
+  "report_pages": 30,
   "presentation_pages": 11,
   "ppt_text_overflow": false,
   "latex_overfull_boxes": false,
   "credential_pattern_matches": [],
   "files": {
-    "report/main.tex": "eea70d055976477e92ed31e1aee5d3424bab34f91272ee2084518d06214d673d",
-    "report/main.pdf": "417e5603179412b2fe9c26fd57cbd7467843ee98d9647c2a2be2c6198d9d05ee",
+    "report/main.tex": "d30d6b90716065f3c7b9e98c27d82469a6dbf469390ddf4fbb848ce4a1b19813",
+    "report/main.pdf": "a64b6fea43d01af48b6a3956b813c17b4fc03d3bbde9c6e0a3687a5e55275fc8",
     "presentation/final_report.pptx": "0c7ed28fb2c4b79351fe074ffbd52fc82c564abc8ef88ace3ba210d497b264b0",
     "presentation/final_report.pdf": "1550ed6b387ad86126d0864b71a1f9a44c4b7d927a5b40ee8c33dbcc7efbbebd",
     "benchmarks/liver/final_ensemble.json": "4a0cd654ec61027a4b6a5b5cf0056e77120b797c3eabd182a14047e558f90c72",
@@ -43,5 +43,7 @@
     "prediction_smoothing.pdf": "73b5460f631e737caa9b8a105f80a9fbdbd553312077936e7559031802346d4c",
     "per_gene_diagnostics.pdf": "944bf993f99e9839de9070493c9e115f05f521debf3c339d242b9c9784b4938c",
     "spatial_examples.pdf": "32f97c5085955d7f019ba25e6a815537bab5f83cdf49389b39df4191df1656cc"
-  }
+  },
+  "report_revision_date": "2026-09-19",
+  "report_revision_audit": "report/editorial_review_20260919.json"
 }

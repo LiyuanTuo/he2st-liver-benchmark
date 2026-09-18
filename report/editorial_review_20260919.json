@@ -1,0 +1,16 @@
+{
+  "revision_date": "2026-09-19",
+  "scope": "Academic writing and report organization only; no new training or results",
+  "pages": 30,
+  "figures": 17,
+  "comparison_table_rows_verified": 34,
+  "comparison_values_match_canonical_tables": true,
+  "component_weights_and_epochs_unchanged": true,
+  "figure_assets_unchanged": true,
+  "core_sources_unchanged": true,
+  "presentation_hashes_unchanged": true,
+  "latex_final_pass_warnings": [],
+  "text_outside_page": false,
+  "pdf_sha256": "a64b6fea43d01af48b6a3956b813c17b4fc03d3bbde9c6e0a3687a5e55275fc8",
+  "tex_sha256": "d30d6b90716065f3c7b9e98c27d82469a6dbf469390ddf4fbb848ce4a1b19813"
+}

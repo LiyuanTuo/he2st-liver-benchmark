@@ -1,0 +1,12 @@
+\begin{tabular}{lrrr}
+\toprule
+组成模型 & 保存轮次 & 推理方式 & 最终权重 \\
+\midrule
+基础组 ResNet18 / seed42 & 9 & 单次 & 1/4 \\
+基础组 ResNet18 / seed17 & 9 & 单次 & 1/4 \\
+基础组 ResNet18 / seed83 & 19 & 四旋转 & 1/4 \\
+扩展组 ResNet18 & 8 & 四旋转 & 1/12 \\
+扩展组 EfficientNet-B0 & 11 & 四旋转 & 1/12 \\
+训练标签平滑 ResNet18 & 8 & 单次 & 1/12 \\
+\bottomrule
+\end{tabular}
