@@ -1,16 +1,16 @@
-# 论文、数据与外部实现
+# 外部代码与数据
 
-核心 `src/he2st/` 是本项目的训练/预测实现，CNN 来自 torchvision。历史实验引用以下作者仓库；本地 `third_party/` 不会随本项目 Git 提交，也不改变原作者许可。
+`src/he2st/` 为本项目实现，CNN 编码器来自 torchvision。各方法适配参考以下作者仓库：
 
-| 方法 | 作者代码 | 本地参考提交 |
+| 方法 | 仓库 | 参考提交 |
 |---|---|---|
-| ResSAT | https://github.com/Wonderangela123/ResSAT | `10d60ab` |
-| GenAR | https://github.com/oyjr/genar | `223a0a6` |
-| Stem | https://github.com/SichenZhu/Stem | `cbc3c7c` |
-| BLEEP | https://github.com/bowang-lab/BLEEP | `2395967` |
-| ST-Net | https://github.com/bryanhe/ST-Net | `43022c1` |
-| HEST | https://github.com/mahmoodlab/HEST | `3ddb5ea` |
+| ResSAT | [Wonderangela123/ResSAT](https://github.com/Wonderangela123/ResSAT) | `10d60ab` |
+| GenAR | [oyjr/genar](https://github.com/oyjr/genar) | `223a0a6` |
+| Stem | [SichenZhu/Stem](https://github.com/SichenZhu/Stem) | `cbc3c7c` |
+| BLEEP | [bowang-lab/BLEEP](https://github.com/bowang-lab/BLEEP) | `2395967` |
+| ST-Net | [bryanhe/ST-Net](https://github.com/bryanhe/ST-Net) | `43022c1` |
+| HEST | [mahmoodlab/HEST](https://github.com/mahmoodlab/HEST) | `3ddb5ea` |
 
-完整论文出处、适配限制与本地完整性记录见 [论文清单](papers/README.md)。统一人肝结果是本项目的适配结果，不能替代原论文在其原始数据/特征/设备上的成绩。ImageNet 初始化权重由 torchvision 下载至用户已有缓存，不放进代码仓库。
+本地副本位于 `third_party/`，不随仓库分发。代码、数据和模型权重分别遵循原来源的使用条件。ImageNet 权重由 torchvision 缓存管理。
 
-数据来自 GSE240429 与 BLEEP 发布的表达/坐标文件。原始图像、RNA、论文 PDF 和第三方权重保持各自来源及使用条件；本仓库不重新分发这些大文件。
+人肝图像来自 GSE240429，表达矩阵和坐标采用 BLEEP 整理版本。论文及数据链接见[来源清单](papers/README.md)。报告中的原论文架构图出处记录于 [sources.json](report/figures/sources.json)，图片权利归原作者或出版方。

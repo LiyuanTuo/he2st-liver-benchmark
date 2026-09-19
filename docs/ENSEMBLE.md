@@ -1,40 +1,40 @@
-# 最终集成：方法、效果和复现
+# 六模型集成
 
-**最终预测 = 0.75 × 原模型组均值 + 0.25 × 新模型组均值。** 所有运算在同一固定 HEG200 的预测表达空间进行。
+基础组包含三个随机种子的 ResNet18；扩展组包含 ResNet18、EfficientNet-B0 和训练标签平滑的 ResNet18。两组各自取预测均值，再按 0.75/0.25 加权，计算单位为固定 HEG200 的 log 相对表达。
 
-| 组成模型                                 | 最终权重 |
-| ---------------------------------------- | -------: |
-| 原 ContextFusion ResNet18，seed42        |      1/4 |
-| 原 ContextFusion ResNet18，seed17        |      1/4 |
-| 原 ContextFusion ResNet18，seed83        |      1/4 |
-| 新 ResNet18 ，seed42                     |     1/12 |
-| 新 EfficientNet-B0 ，seed42              |     1/12 |
-| 新 ResNet18，训练标签20%邻域平滑，seed42 |     1/12 |
+| 组成模型 | 随机种子 | 最终权重 |
+|---|---:|---:|
+| 基础组 ResNet18 | 42 | 1/4 |
+| 基础组 ResNet18 | 17 | 1/4 |
+| 基础组 ResNet18 | 83 | 1/4 |
+| 扩展组 ResNet18 | 42 | 1/12 |
+| 扩展组 EfficientNet-B0 | 42 | 1/12 |
+| 扩展组 ResNet18，20% 训练标签平滑 | 42 | 1/12 |
 
-这是多种子与不同训练方案的预测平均，不是基于 bootstrap 样本重训的 bagging，也不是训练 stacking 元模型。C1 先从新单模型及均值中选中三模型均值，再比较原组、新组及新组占25%/50%/75%的组合，以 C1 HEG200 PCC 锁定25%。三组新模型最终均选择原权重，EMA未胜出。
+C1 先从扩展组单模型及等权平均中选出三模型平均，再比较扩展组占比 0、25%、50%、75%、100% 的组合。25% 的 C1 HEG200 PCC 最高，为 0.3665。三份扩展组权重均选中当前参数，未选中 EMA。
 
-[集成流程图（PDF）](../report/figures/ensemble_method.pdf)
+[集成结构图](../report/figures/ensemble_method.pdf) · [权重路径与配置](../benchmarks/liver/final_ensemble.json) · [模型选择记录](../benchmarks/liver/optimization_selection_locked.json)
 
-| 比较             |        D1 HEG200 |         D1 HEG50 |    MAE |
-| ---------------- | ---------------: | ---------------: | -----: |
-| 原 ST-Net        |           0.1472 |           0.1978 | 0.4378 |
-| 原三种子集成     |           0.2302 |           0.3156 | 0.4256 |
-| 最终六模型集成   | **0.2343** | **0.3180** | 0.4274 |
-| 前轮全随机单模型 |           0.2302 |           0.3278 | 0.4197 |
+## D1 结果
 
-最终集成相对原三种子只有小幅增益，MAE略变差，且HEG50没有超过全随机单模型。24个空间块、300次配对bootstrap的HEG200增益区间为[0.0009,0.0077]，HEG50为[-0.0037,0.0091]。这只描述当前切片，不代表独立患者泛化。
+| 模型 | HEG200 PCC | HEG50 PCC | MAE |
+|---|---:|---:|---:|
+| ST-Net 适配 | 0.1472 | 0.1978 | 0.4378 |
+| 基础组三模型平均 | 0.2302 | 0.3156 | 0.4256 |
+| 六模型集成 | 0.2343 | 0.3180 | 0.4274 |
+| 全随机初始化单模型 | 0.2302 | 0.3278 | 0.4197 |
 
-六个模型的展平残差相关性约0.974–0.992，说明误差高度共享，能够通过平均消除的差异有限；共同测量噪声、基因尺度和偏差也会影响此统计量，不能从它单独确定误差原因。诊断在锁定结果后进行，未用于选权重。
+相对基础组，六模型的 PCC 增加 0.0042/0.0024，MAE 增加 0.0018。按 D1 的 24 个空间块进行 300 次配对 bootstrap，HEG200 增益的 95% 区间为 [0.0009, 0.0077]，HEG50 为 [-0.0037, 0.0091]。区间描述单张切片内的抽样变化。
 
-## 从六份权重直接推理
+六个模型的展平残差相关系数为 0.974–0.992，预测误差高度相关。完整结果见[基线表](../benchmarks/liver/baseline_20260913.csv)、[组合比较](../benchmarks/liver/optimization_20260914.csv)和[残差分析](../benchmarks/liver/ensemble_error_analysis.json)。
+
+## 推理
+
+准备三尺度图像缓存及配置列出的六份权重，在仓库根目录运行：
 
 ```bash
 python run.py ensemble --slides C73_D1 --output results/final_prediction.npz
 python run.py evaluate --prediction results/final_prediction.npz --truth data/processed/gse240429_heg/arrays/C73_D1.npz --output results/final_metrics.json
 ```
 
-[冻结配置](../benchmarks/liver/final_ensemble.json)记录六份权重的路径、SHA256、epoch、TTA和分组。执行前会核对全部权重，缺失时不会下载或跳过某个成员。准备好的图像缓存及六份权重需留在本地；Git仓库不直接分发这些大文件。各组训练及历史结果复现见[运行指南](QUICKSTART.md)。
-
-2026-09-15直接加载六份权重，对2265×200表达值重推理，结果与冻结预测逐元素一致，最大差为0，见[独立集成核验](../benchmarks/liver/final_ensemble_verification.json)。
-
-正式推导、完整结果、误差分析和实验限制见[LaTeX实验报告](../report/main.pdf)。
+程序先校验权重的 SHA256，再按各自的旋转增强设置生成预测。2026-09-15 的重推理与保存的 2265×200 预测矩阵逐元素一致，见[核验记录](../benchmarks/liver/final_ensemble_verification.json)。训练步骤见[运行指南](QUICKSTART.md)。

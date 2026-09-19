@@ -1,33 +1,36 @@
-# 固定人肝基准
+# 人肝基准
 
-数据：GSE240429，同一供体 C73 的四张连续人肝切片。来源为 [GEO](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE240429) 与 [BLEEP 数据目录](https://github.com/bowang-lab/BLEEP/tree/main/GSE240429_data)。这是跨切片实验，不能据此声称跨患者泛化。
+数据为 GSE240429 中供体 C73 的四张连续切片。H&E 来自 [GEO](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE240429)，表达矩阵与坐标来自 [BLEEP](https://github.com/bowang-lab/BLEEP/tree/main/GSE240429_data)。实验评价同供体跨切片预测。
 
-| 切片 | spot 数 | 唯一角色 |
+| 切片 | spot 数 | 用途 |
 |---|---:|---|
 | C73_A1 | 2378 | 训练 |
 | C73_B1 | 2349 | 训练 |
-| C73_C1 | 2277 | 验证、模型选择 |
-| C73_D1 | 2265 | 固定测试 |
+| C73_C1 | 2277 | 验证及模型选择 |
+| C73_D1 | 2265 | 测试 |
 
-## 基因和真值
+## 基因选择与表达单位
 
-只使用 A1+B1 的全转录组 counts，逐 spot 归一化到 10000 后取 log1p，以训练平均表达排序选 200 个高表达基因。固定 HEG50 是同一排序前 50；不是测试 PCC 最高的 50。重复符号仅保留首次出现，空名称排除；不排除高表达的核糖体和线粒体基因。最终列顺序沿用历史 GenAR 层次排序，并冻结在 [genes.csv](../benchmarks/liver/genes.csv)。
+在 A1+B1 上，将每个 spot 的全转录组计数归一化到 10000，取 `log1p` 后按训练平均表达降序选择 HEG200；前 50 个为 HEG50。空基因名剔除，重复名保留首次出现，核糖体和线粒体基因参与排序。
 
-200 个基因按列顺序以换行连接、末尾带换行的 SHA256：
-`4dab411dd5565b34312fd10b927ad4c806408477c29ede1eea30259b035f0181`
-
-**选基因时用全转录组分母，最终比较用固定面板分母**。每个 spot 的评测真值为：
+[genes.csv](../benchmarks/liver/genes.csv)保存基因列表及 HEG50 标记。列顺序沿用 GenAR 的层次排序。按列顺序连接基因名、每行末尾带换行符，其 SHA256 为：
 
 ```text
-y[i,g] = log(1 + 10000 * count[i,g] / sum(count[i, fixed_HEG200]))
+4dab411dd5565b34312fd10b927ad4c806408477c29ede1eea30259b035f0181
 ```
 
-真值不做 PCA/Harmony 重建，不用邻域均值替换。新模型直接预测该 log 表达，不对预测值再次归一化。它预测相对表达，不是绝对 RNA 分子数。
+预测目标为 HEG200 内部的相对表达：
 
-## 指标与选择
+```text
+y[i,g] = log(1 + 10000 * count[i,g] / sum(count[i, HEG200]))
+```
 
-每个基因在全部 D1 spots 上单独计算 Pearson r，然后分别对固定 200/50 基因取宏平均。常量向量的 PCC 未定义，保留 NaN 并报告有效基因数，不能记成 1 或悄悄删掉难基因。MAE 在同一表达单位计算。
+选基因采用全转录组总计数，评价采用 HEG200 总计数。测试目标保留实测计数的变换值，不做 PCA、Harmony 或邻域平滑。ContextFusion 直接预测上述单位；其他方法的输出转换见[方法适配](02_METHODS_AND_PROTOCOL.md)。HEG50 评价取相应列，不再归一化。
 
-检查点、TTA 和混合权重仅按 C1 HEG200 PCC 选择。D1 已在多轮开发中被反复报告，因此应视为反复使用的开发基准，不能称作新的、从未查看过的最终外部测试。最终论文仍需要独立供体验证。
+## 指标与模型选择
 
-ResSAT 论文鼠脑 2000 HVG 与重建目标的 PCC，不等价于这里的人肝 HEG200、未重建真值 PCC。完整口径核对见 [诊断记录](05_PCC_DIAGNOSIS.md)。
+PCC 在每个基因的全部测试 spots 上计算，再对 HEG200、HEG50 分别取平均。常量向量的 PCC 记为 NaN，并记录有效基因数。MAE 在同一表达单位计算。
+
+ContextFusion 的检查点、旋转增强和集成比例按 C1 HEG200 PCC 选择。已有方法的保存准则见[适配配置](02_METHODS_AND_PROTOCOL.md)。D1 曾在开发中多次使用；结果反映该固定切片上的表现，独立供体泛化尚未验证。
+
+各方法共用数据划分、基因集合和评价目标，但编码器、视野及训练预算不同。ResSAT 鼠脑重建表达实验单独记录于 [PCC 诊断](05_PCC_DIAGNOSIS.md)。
