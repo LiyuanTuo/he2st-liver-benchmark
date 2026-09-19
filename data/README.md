@@ -1,6 +1,6 @@
 # 数据准备
 
-原始数据和缓存保存在本地。数据划分与基因选择见[基准协议](../docs/BENCHMARK.md)。以下缓存路径相对于 `data/`。
+数据划分与基因选择见[基准协议](../docs/BENCHMARK.md)。以下路径相对于 `data/`，数据文件不随仓库分发。
 
 ## 缓存格式
 
@@ -20,7 +20,7 @@ filtered_expression_matrices/{1,2,3,4}/{matrix.mtx,features.tsv,barcodes.tsv}
 tissue_pos_matrices/tissue_positions_list_{1,2,3,4}.csv
 ```
 
-H&E 取自 [GSE240429](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE240429) 的 GSM7697868–GSM7697871，依次对应 A1–D1。将 `GEX_C73_*_Merged.tiff.gz` 解压为可内存映射的 RGB TIFF，命名为 `C73_A1.tif` 等，放入 `processed/gse240429/tiff/`。坐标对应全分辨率图像，不能直接改用 hires 缩略图。
+H&E 取自 [GSE240429](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE240429) 的 GSM7697868–GSM7697871，依次对应 A1–D1。将 `GEX_C73_*_Merged.tiff.gz` 解压为可内存映射的 RGB TIFF，命名为 `C73_A1.tif` 等，放入 `processed/gse240429/tiff/`。裁图坐标以全分辨率图像为准。
 
 ## 生成缓存
 

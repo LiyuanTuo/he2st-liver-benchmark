@@ -2,7 +2,7 @@
 
 ## 环境与数据
 
-需要 Python 3.11 及以上，依赖列于 [pyproject.toml](../pyproject.toml)。已有环境可直接使用；缺少依赖时运行 `python -m pip install -r requirements.txt`。GPU 训练需要支持 CUDA 的 PyTorch。
+需要 Python 3.11 及以上和 PyTorch。已有环境可直接使用；缺少依赖时运行 `python -m pip install -r requirements.txt`。GPU 训练需要 CUDA 版 PyTorch。
 
 在仓库根目录执行。Windows 可用 `py -3.12`，WSL 可用 `python3`：
 
@@ -21,9 +21,9 @@ python run.py predict --checkpoint results/my_run/best.pt --slides C73_D1 --outp
 python run.py evaluate --prediction results/my_run/D1_prediction.npz --truth data/processed/gse240429_heg/arrays/C73_D1.npz --output results/my_run/D1_metrics.json
 ```
 
-`fit` 使用训练和验证表达；`predict` 使用图像、基因名、条形码和坐标；`evaluate` 读取实测表达，核对样本与基因顺序后计算指标。CPU 运行可加 `--device cpu`。
+`fit` 读取训练和验证数据；`predict` 根据图像和坐标生成表达矩阵；`evaluate` 对齐基因与样本后，与实测表达比较。`fit`、`predict` 可加 `--device cpu` 在 CPU 上运行。
 
-每次训练保存 `protocol.json`、`history.json`、`best.pt`、`selection.json` 和 `validation.npz`。保留权重旁的 `selection.json`；更换配置时使用新的输出目录。
+输出文件见 [results/README.md](../results/README.md)。推理需要权重及同目录的 `selection.json`；不同配置使用不同输出目录。
 
 ## 多配置实验
 
@@ -31,7 +31,7 @@ python run.py evaluate --prediction results/my_run/D1_prediction.npz --truth dat
 python experiments/optimize.py --output results/my_sweep
 ```
 
-该命令运行 `configs/` 中的三组配置，按 C1 HEG200 PCC 选择权重、旋转增强和组合比例，保存 `selection_locked.json` 后评价 D1。
+运行三组配置，按 C1 HEG200 PCC 选择权重、旋转增强和组合比例，保存选择记录后评价 D1。
 
 报告中的六模型结果还包含基础组三个随机种子的预测。已有这些预测时，运行：
 
@@ -43,14 +43,7 @@ python experiments/optimize.py --output results/optimization_20260914 --baseline
 
 ## 六模型推理
 
-准备[集成配置](../benchmarks/liver/final_ensemble.json)列出的六份权重后运行：
-
-```bash
-python run.py ensemble --slides C73_D1 --output results/final_prediction.npz
-python run.py evaluate --prediction results/final_prediction.npz --truth data/processed/gse240429_heg/arrays/C73_D1.npz --output results/final_metrics.json
-```
-
-权重和图像缓存保存在本地。集成系数、文件校验和结果见[集成说明](ENSEMBLE.md)。
+准备[配置文件](../benchmarks/liver/final_ensemble.json)列出的六份权重后，按[集成说明](ENSEMBLE.md#推理)运行。权重路径、模型系数和旋转增强设置均由该文件指定。
 
 ## 报告编译
 
