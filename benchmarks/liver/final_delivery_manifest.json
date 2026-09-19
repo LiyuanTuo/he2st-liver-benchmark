@@ -1,12 +1,12 @@
 {
-  "report_pages": 30,
+  "report_pages": 29,
   "presentation_pages": 11,
   "ppt_text_overflow": false,
   "latex_overfull_boxes": false,
   "credential_pattern_matches": [],
   "files": {
-    "report/main.tex": "d30d6b90716065f3c7b9e98c27d82469a6dbf469390ddf4fbb848ce4a1b19813",
-    "report/main.pdf": "a64b6fea43d01af48b6a3956b813c17b4fc03d3bbde9c6e0a3687a5e55275fc8",
+    "report/main.tex": "de3bfcb6f4616870a9009b985c44e5349bb94f860ab86f44cd6ff6c43279f671",
+    "report/main.pdf": "91a9084ac6ea8994fe0e2992ac1bfe07bd7b4a03f5e4af4aa6c70fe05f2ce923",
     "presentation/final_report.pptx": "0c7ed28fb2c4b79351fe074ffbd52fc82c564abc8ef88ace3ba210d497b264b0",
     "presentation/final_report.pdf": "1550ed6b387ad86126d0864b71a1f9a44c4b7d927a5b40ee8c33dbcc7efbbebd",
     "benchmarks/liver/final_ensemble.json": "4a0cd654ec61027a4b6a5b5cf0056e77120b797c3eabd182a14047e558f90c72",
@@ -45,5 +45,6 @@
     "spatial_examples.pdf": "32f97c5085955d7f019ba25e6a815537bab5f83cdf49389b39df4191df1656cc"
   },
   "report_revision_date": "2026-09-19",
-  "report_revision_audit": "report/editorial_review_20260919.json"
+  "report_revision_audit": "report/editorial_review_20260919.json",
+  "workspace_cleanup_audit": "benchmarks/liver/workspace_cleanup_20260919.json"
 }

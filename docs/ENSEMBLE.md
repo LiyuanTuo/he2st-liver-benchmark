@@ -13,7 +13,7 @@
 
 这是多种子与不同训练方案的预测平均，不是基于 bootstrap 样本重训的 bagging，也不是训练 stacking 元模型。C1 先从新单模型及均值中选中三模型均值，再比较原组、新组及新组占25%/50%/75%的组合，以 C1 HEG200 PCC 锁定25%。三组新模型最终均选择原权重，EMA未胜出。
 
-![集成流程](../report/figures/ensemble_method.png)
+[集成流程图（PDF）](../report/figures/ensemble_method.pdf)
 
 | 比较 | D1 HEG200 | D1 HEG50 | MAE |
 |---|---:|---:|---:|

@@ -51,9 +51,7 @@
 修订日期：& 2026年9月19日
 \end{tabular}
 \vfill
-\begin{minipage}{.85\textwidth}\small
-研究对象为 GSE240429 中同一供体的四张人肝连续切片。通过组织图像预测每个测量位置的 200 个高表达基因，比较已有方法的适配实现，并分析多尺度图像输入与模型集成的作用。
-\end{minipage}
+
 \end{titlepage}
 \pagenumbering{Roman}\hypersetup{pageanchor=true}
 \section*{摘要}\addcontentsline{toc}{section}{摘要}
@@ -79,12 +77,12 @@
 \subsection{样本来源与基本数据单位}
 数据来自 GEO 数据集 GSE240429，其关联研究为 Andrews 等对健康和原发性硬化性胆管炎人肝免疫景观的分析\cite{andrews,geo}。本实验使用其中健康供体 C73 的四张连续切片，\HE 图像取自 GEO，表达矩阵和空间位置文件采用 BLEEP 作者整理的版本\cite{bleep}。原始生物学研究与 BLEEP 预测方法分别作为数据来源和方法来源引用。
 
-空间转录组中的一个测量位置通常称为 \textit{spot}。本研究每个 spot 包含三类信息：在组织图像中的二维坐标、以该坐标为中心的染色图像，以及相应的基因计数向量。spot 是空间测量单位，不等同于单个细胞；不同位置还可能因组织结构而存在相关性。
+空间转录组中的一个测量位置通常称为 \textit{spot}。本研究每个 spot 包含三类信息：在组织图像中的二维坐标、以该坐标为中心的染色图像，以及相应的基因计数向量。spot 是空间测量单位；不同位置还可能因组织结构而存在相关性。
 
 训练时将每个位置的图像与 RNA 表达配对，学习图像到表达的映射。预测时输入图像和位置坐标，输出 200 个基因的表达向量，再按原始坐标排列成空间表达图。D1 共有 2265 个位置，因此最终预测为 $2265\times200$ 的矩阵，行对应位置，列对应预先确定的基因。输出的具体表达单位在第\ref{sec:target}节定义。
 
 \subsection{训练、验证与测试划分}
-按照完整切片划分数据，而非将同一切片的图块随机分配到不同集合。训练集用于更新模型参数；验证集用于选择超参数、模型保存时点和集成权重；测试集用于计算最终预测误差。表\ref{tab:split}列出具体分配。
+按照完整切片划分数据。表\ref{tab:split}列出具体分配。
 
 \begin{table}[H]\centering
 \caption{数据集划分及各切片用途}\label{tab:split}
@@ -97,7 +95,7 @@ C73\_D1&2265&GSM7697871&测试\\\bottomrule
 \end{tabular}
 \end{table}
 
-训练集共 4727 个位置。图\ref{fig:data}展示四张切片的组织形态。由于它们来自同一供体，本实验评价的是同供体跨切片预测能力。D1 在项目开发阶段已被多次评价，属于固定开发测试集，而非全新的外部验证队列。
+训练集共 4727 个位置。图\ref{fig:data}展示四张切片的组织形态。由于它们来自同一供体，本实验评价的是同供体跨切片预测能力。
 
 \begin{figure}[htbp]\centering
 \includegraphics[width=.86\textwidth]{data_overview.pdf}
@@ -111,9 +109,9 @@ C73\_D1&2265&GSM7697871&测试\\\bottomrule
 z_{ig}=\log\left(1+10^4\frac{c_{ig}}{\sum_{h\in\mathcal G_{\rm all}}c_{ih}}\right),\qquad
 \bar z_g=\frac{1}{n_{\rm train}}\sum_{i\in\rm train}z_{ig}.
 \end{equation}
-其中，除以总计数是为了减小不同位置捕获 RNA 总量的影响；乘以 $10^4$ 统一尺度，取自然对数则压缩高计数的数值范围。按 $\bar z_g$ 降序取前 200 个基因，定义为 HEG200；其中前 50 个定义为 HEG50。HEG 为 highly expressed genes 的缩写，表示高表达基因。本研究未按测试相关性或表达方差重新选基因。
+按 $\bar z_g$ 降序取前 200 个基因，定义为 HEG200；其中前 50 个定义为 HEG50。HEG 为 highly expressed genes ，表示高表达基因。本研究未按测试相关性或表达方差重新选基因。
 
-重复基因符号保留首次出现，空名称剔除。核糖体和线粒体基因按相同标准参与排序，最终包含 47 个 RPL/RPS 基因和 9 个 MT- 基因。图\ref{fig:panel}显示，HEG200 在训练集中的最低检出率为 94.20\%，中位数为 98.48\%。这一集合具有较高的表达覆盖度，适合用于检验形态与相对表达的关系。
+重复基因符号保留首次出现。核糖体和线粒体基因按相同标准参与排序，最终包含 47 个 RPL/RPS 基因和 9 个 MT- 基因。图\ref{fig:panel}显示，HEG200 在训练集中的最低检出率为 94.20\%，中位数为 98.48\%。这一集合具有较高的表达覆盖度，适合用于检验形态与相对表达的关系。
 
 \begin{figure}[htbp]\centering
 \includegraphics[width=\textwidth]{gene_panel.pdf}
@@ -122,16 +120,16 @@ z_{ig}=\log\left(1+10^4\frac{c_{ig}}{\sum_{h\in\mathcal G_{\rm all}}c_{ih}}\righ
 
 所有方法使用同一基因集合及列顺序。HEG50 始终是 HEG200 中预先指定的子集；计算 HEG50 指标时，仅选择相应列，不再重新归一化。具体基因名称和训练统计随报告的复现材料保存。
 
-\subsection{预测目标及不同方法的输出转换}\label{sec:target}
+\subsection{预测目标及输出转换}\label{sec:target}
 本研究预测的是所选 200 个基因内部的相对表达，而非绝对 RNA 分子数。对每个位置，将这 200 个基因的计数总和归一化至 $10^4$，再取自然对数：
 \begin{equation}\label{eq:target}
 y_{ig}=\log\left(1+10^4\frac{c_{ig}}{\sum_{h\in\mathcal G_{200}}c_{ih}}\right),\quad g\in\mathcal G_{200}.
 \end{equation}
-例如，某基因计数为 20，该位置 200 个基因总计数为 2000，则目标值为 $\log(101)\approx4.615$。不同位置的同一基因均按式\eqref{eq:target}计算，模型据此学习它在空间上的相对变化。
+不同位置的同一基因均按式\eqref{eq:target}计算，模型据此学习它在空间上的相对变化。
 
 选基因时使用全转录组总计数，以确定基因在训练组织中的表达排名；预测目标使用所选基因总计数，使仅输出 200 个基因的方法能够在同一单位下评价。ContextFusion 直接学习式\eqref{eq:target}，预测结果不再二次归一化。已有方法若输出计数，则将预测计数按相同方式变换；若输出全转录组归一化后的 log 表达，则先用指数逆变换恢复非负丰度，再以预测的 200 基因丰度总和归一化。转换分母取自预测结果，不使用测试 RNA 的总量。
 
-所有主结果的参照值均来自式\eqref{eq:target}，不进行主成分分析（PCA）重建或邻域平均。ResSAT 适配在训练目标内部使用 PCA，预测后反投影回基因空间，但最终仍与同一未重建参照值比较。由此区分模型内部处理与最终评价目标。
+所有主结果的参照值均来自式\eqref{eq:target}，不进行主成分分析（PCA）重建或邻域平均。ResSAT 适配在训练目标内部使用 PCA，预测后反投影回基因空间。
 
 \subsection{评价指标及其含义}
 主要指标为 Pearson 相关系数（PCC）。对于每个基因，将它在 D1 的 2265 个实测值与 2265 个预测值配对，计算
@@ -153,7 +151,7 @@ PCC 越高表示空间变化越一致，MAE 越低表示表达数值越接近。
 
 \begin{figure}[htbp]\centering
 \includegraphics[width=\textwidth]{protocol_flow.pdf}
-\caption[从数据划分到预测评价的实验流程]{实验流程。训练集提供图像与表达的配对样本；验证集用于选择网络参数保存时点和集成权重。测试时由图像和位置坐标生成表达预测，随后与 D1 实测 RNA 比较。图中 HEG200/HEG50 指训练集预先选定的两组基因。}\label{fig:protocol}
+\caption[从数据划分到预测评价的实验流程]{实验流程。训练集提供图像与表达的配对样本；验证集用于选择网络参数保存时点和集成权重。测试时由图像和位置坐标生成表达预测，随后与 D1 实测 RNA 比较。}\label{fig:protocol}
 \end{figure}
 
 
@@ -178,21 +176,21 @@ BLEEP 为图像和表达分别建立编码分支，通过对比学习使同一�
 
 \begin{figure}[H]\centering
 \includegraphics[width=.82\textwidth]{bleep_arch.png}
-\caption[BLEEP 的对比学习与表达检索流程]{BLEEP 作者仓库的模型总览\cite{bleep}。训练时将配对图像和表达映射到同一特征空间；预测时根据查询图像检索训练参考表达，并组合成预测表达。参考库仅包含训练切片。}\label{fig:bleep}
+\caption[BLEEP 的对比学习与表达检索流程]{BLEEP 模型总览\cite{bleep}。训练时将配对图像和表达映射到同一特征空间；预测时根据查询图像检索训练参考表达，并组合成预测表达。参考库仅包含训练切片。}\label{fig:bleep}
 \end{figure}
 
 本地适配使用固定的 ResNet18 特征和作者的双投影头，训练图像与表达之间的对齐关系。验证集用于联合选择训练轮次和检索邻居数，最终取第 40 轮、100 个参考邻居。原论文使用的图像编码器和训练预算与此不同，表中结果对应本地适配版本。
 
 \clearpage
 \subsubsection{ResSAT：融合形态和空间位置}
-ResSAT 同时编码局部图像和二维坐标。Fourier 特征映射把坐标转换为不同频率的正弦、余弦表示，以表达位置变化；特征线性调制（FiLM）再根据坐标分支的输出，对图像特征逐维缩放和平移。注意力模块随后在不同位置之间交换信息（图\ref{fig:ressat}）。与独立预测每个图块相比，该设计能够使用空间关系。
+ResSAT 同时编码局部图像和二维坐标。Fourier 特征映射把坐标转换为不同频率的正弦、余弦表示，以表达位置变化；特征线性调制（FiLM）再根据坐标分支的输出，对图像特征逐维缩放和平移。注意力模块随后在不同位置之间交换信息（图\ref{fig:ressat}）。与独立预测每个图块相比，该设计能够充分使用空间关系。
 
 \begin{figure}[H]\centering
 \includegraphics[width=\textwidth]{ressat_arch.png}
 \caption[ResSAT 的图像与空间信息融合结构]{ResSAT 2026 接收稿 Fig. 9\cite{ressat}。图像特征与坐标特征分别编码，坐标分支通过 FiLM 调制图像特征，再由注意力模块聚合不同位置的信息。图中展示原作者结构。}\label{fig:ressat}
 \end{figure}
 
-本研究复用作者模型主体，将预测基因限制为 HEG200。训练表达先投影到仅由 A1+B1 拟合的 50 维 PCA 空间，即用 50 个主要变化方向表示 200 个基因的表达；预测后再反投影为 200 维表达。训练批大小设为 16，评价采用对应批大小的预测。最终测试参照不经 PCA 重建，因此本实验分数与论文中采用重建表达的结果分别讨论。
+本研究复用作者模型主体。但最终测试参照不经 PCA 重建，因此本实验分数与论文中采用重建表达的结果分别讨论。
 
 \clearpage
 \subsubsection{GenAR：逐尺度生成表达}
@@ -234,7 +232,7 @@ Stem 通过扩散模型学习图像条件下的表达分布。训练时向表达
 \caption[同一位置的三尺度图像输入]{A1 中同一位置的三个实际输入视野。选取距该切片坐标中位数最近的位置作为示例。原始边长分别为 224、896、1792 像素，均缩放到 $224\times224$；由左向右可见组织范围扩大、单个细胞的相对尺寸减小。}\label{fig:patches}
 \end{figure}
 
-图\ref{fig:patches}说明，多尺度输入并非将同一小图简单放大，而是从原图提取不同范围的组织。局部图块保留细胞细节，大视野补充组织分布，融合层学习如何利用三种信息。
+图\ref{fig:patches}局部图块保留细胞细节，大视野补充组织分布，融合层学习如何利用三种信息。
 
 \subsection{ContextFusion 的训练与模型选择}\label{sec:training}
 \subsubsection{监督目标和损失函数}
@@ -245,10 +243,10 @@ Stem 通过扩散模型学习图像条件下的表达分布。训练时向表达
 \mathcal L=\frac{1}{B|\mathcal G_{200}|}\sum_{i,g}(\tilde y_{ig}-\tilde{\hat y}_{ig})^2
 +0.2\left(1-\frac{1}{|\mathcal G_{200}|}\sum_g r_g^{\rm batch}\right),
 \end{equation}
-其中 $B$ 为一次参数更新使用的位置数，即批大小；$r_g^{\rm batch}$ 是基因 $g$ 在当前批次位置间的相关系数。第一项约束数值误差，第二项鼓励预测与实测表达的变化方向一致。实现中对相关系数分母加入小常数，以保持低方差批次的数值稳定。
+其中 $B$ 即批大小；$r_g^{\rm batch}$ 是基因 $g$ 在当前批次位置间的相关系数。第一项约束数值误差，第二项鼓励预测与实测表达的变化方向一致。实现中对相关系数分母加入小常数，以保持低方差批次的数值稳定。
 
 \subsubsection{基础组与扩展组}
-为使模型名称对应明确的实验设置，将用于集成的六个模型分为两组。\textbf{基础组}采用同一 ResNet18 结构及训练方案，仅改变随机种子（42、17、83）。随机种子控制参数初始化和训练样本顺序等随机过程；每个模型独立训练。\textbf{扩展组}包含 ResNet18、EfficientNet-B0 和训练标签平滑 ResNet18，三者均使用种子 42。两组均采用 ImageNet 预训练初始化，再更新全部网络参数。
+为使模型名称对应明确的实验设置，将用于集成的六个模型分为两组。\textbf{基础组}采用同一 ResNet18 结构及训练方案；每个模型独立训练。\textbf{扩展组}包含 ResNet18、EfficientNet-B0 和训练标签平滑 ResNet18。两组均采用 ImageNet 预训练初始化，再更新全部网络参数。
 
 
 \begin{table}[H]\centering\small
@@ -329,14 +327,10 @@ C1 的 HEG200 PCC 在 $\alpha=0.25$ 时最高，故测试使用
 \end{table}
 
 
-输入视野对照使用与基础组种子42模型相同的结构、优化器和损失函数，仅把 896 与 1792 像素视野替换为同一个 224 像素图块的副本。这样保留三路输入及参数量，使差值主要反映额外视野的信息作用。
+输入视野对照使用与基础组模型相同的结构、优化器和损失函数，仅把 896 与 1792 像素视野替换为同一个 224 像素图块的副本。这样保留三路输入及参数量，使差值主要反映额外视野的信息作用。
 
 随机初始化对照不加载预训练参数，编码器和回归头均从随机值开始优化。其编码器学习率为 $3\times10^{-4}$，高于预训练模型的 $3\times10^{-5}$，回归头学习率相同。因此这一对照评价的是可运行的从零训练方案，包含初始化与适配学习率的共同变化。
 
-\subsection{区间估计与空间可视化}
-空间位置之间存在相关性。为估计当前测试切片内部的指标波动，将 D1 坐标范围划分为 $5\times5$ 网格，得到 24 个非空空间块。对空间块进行 300 次有放回抽样，每次计算 PCC。比较两个模型时使用相同抽样块，取差值分布的第 2.5 和第 97.5 百分位作为 95\% 区间。该空间块 bootstrap 反映单张切片内的抽样变化，不包含独立患者差异和全部模型选择不确定性。
-
-空间图选用既有分析中的 ALB 和 HP。将每个位置的实测或预测表达赋予颜色，并放回其原始坐标。相同基因的不同方法共用色标，以便观察表达高低区域与动态范围；基因选择不随本次集成结果调整。
 
 \section{实验结果}\label{sec:results}
 \subsection{统一人肝任务上的方法比较}
@@ -361,7 +355,7 @@ C1 的 HEG200 PCC 在 $\alpha=0.25$ 时最高，故测试使用
 
 \begin{figure}[H]\centering
 \includegraphics[width=.9\textwidth]{comparison.pdf}
-\caption[主要模型在 D1 上的预测性能]{主要模型的 D1 宏平均 PCC。蓝色表示 HEG200，橙色表示 HEG50；Scratch single 为全随机初始化的三尺度单模型，Prior 3-seed 为基础组三模型平均。横向虚线仅标示 PCC 为 0.5 的位置。}\label{fig:comparison}
+\caption[主要模型在 D1 上的预测性能]{主要模型的 D1 宏平均 PCC。Scratch single 为全随机初始化的三尺度单模型，Prior 3-seed 为基础组三模型平均。横向虚线仅标示 PCC 为 0.5 的位置。}\label{fig:comparison}
 \end{figure}
 
 
@@ -406,20 +400,20 @@ HEG50 PCC&0.3180&[0.2489, 0.3722]\\
 集成进一步组合不同随机种子和训练配置的输出。其优势在于无需改变测试输入或表达参照，即可在相同基因集合上改善部分预测。当前六模型相对基础组三模型的增益较小，残差相关分析见附录\ref{app:supplement}。因此，主要性能提升应归于完整的多尺度学习方案，集成提供进一步的有限补充。
 
 \subsection{跨切片预测差异的可能来源}
-以基础组三尺度种子42模型为例，训练集、C1 和 D1 的 HEG50 PCC 分别约为 0.6082、0.4854 和 0.3019。训练表现高于测试表现，说明模型能够拟合配对信号，但跨切片仍存在分布差异。当前仅两张训练切片，组织形态和染色变化的覆盖范围有限。
+以基础组三尺度模型为例，训练集、C1 和 D1 的 HEG50 PCC 分别约为 0.6082、0.4854 和 0.3019。训练表现高于测试表现，说明模型能够拟合配对信号，但跨切片仍存在分布差异。当前仅两张训练切片，组织形态和染色变化的覆盖范围有限。
 
 表达测量条件也可能影响评价。每个位置的全转录组 UMI 计数中位数在 A1、B1、C1、D1 分别为 8134、6537、12423、6010。UMI 为用于区分捕获转录本的分子标识，其计数同时受生物 RNA 含量和实验捕获过程影响。固定 C1 预测，将其原始计数按约 0.484 的保留概率二项降采样并重复 30 次后，该模型 HEG200 PCC 由 0.3485 降至平均约 0.3033。该代理实验支持计数差异可能贡献部分验证与测试落差，但尚不能分离生物差异、捕获效率和测序过程的各自作用。
 
-\subsection{与原论文结果的关系}
+\subsection{与原论文结果的比较}
 不同研究的 PCC 必须结合组织、基因选择和表达处理理解。ResSAT 文中的 0.6577 和 0.6980 来自鼠脑 2000 个高变基因及 PCA/Harmony 重建表达设置；本地对应单种子重现约为 0.6506 和 0.6667。该实验用于核对方法与评价流程，与本报告的人肝 HEG200 任务分别记录。
 
-同一批人肝切片上，BLEEP 原论文报告 HEG50 PCC 为 $0.175\pm0.016$，后续单图块 EfficientNet-B0 研究报告约 0.310\cite{bleep,singlepatch}。两者使用 slice 3（C1）测试，其余三张训练，并采用四切片高变基因并集及 Harmony 处理。与本研究的训练、验证、测试划分和基因集合不同，这些数值提供同组织的研究背景，但不构成直接排名。单个基因的高 PCC 也不能等同于固定基因集合的平均 PCC。
+同一批人肝切片上，BLEEP 原论文报告 HEG50 PCC 为 $0.175\pm0.016$，后续单图块 EfficientNet-B0 研究报告约 0.310\cite{bleep,singlepatch}。两者使用 slice 3（C1）测试，其余三张训练，并采用四切片高变基因并集及 Harmony 处理。与本研究的训练、验证、测试划分和基因集合不同，这些数值提供同组织的研究背景，但不构成直接的优劣关系。单个基因的高 PCC 也不能等同于固定基因集合的平均 PCC。
 
 \subsection{适用范围与后续研究}
 当前结果表明，人肝组织图像中包含可用于预测部分基因表达变化的信息。研究仍受单供体、训练切片较少以及方法预算不完全一致的限制，测试基因平均 PCC 尚未达到 0.5。后续应在独立供体上检验模型，并在相同训练预算下比较组织预训练编码器与现有编码器，以确定性能差异能否跨样本保持。
 
 \section{结论}
-本研究在明确的训练、验证和测试划分下，完成了从人肝 \HE 图像到 200 个高表达基因空间表达的预测，并比较了五种已有方法的适配实现及图像回归基线。三尺度 ContextFusion 通过联合观察局部细胞形态与周围组织，取得优于单视野对照的结果；六模型加权集成的 D1 HEG200 和 HEG50 PCC 分别为 0.2343 和 0.3180，较本地 ST-Net 适配分别提高 0.0872 和 0.1202。
+本研究在明确的训练、验证和测试划分下，完成了从人肝 \HE 图像到 200 个高表达基因空间表达的预测，并比较了五种已有方法的适配实现及图像回归基线。三尺度 ContextFusion 通过联合观察局部细胞形态与周围组织，取得优于单视野对照的结果；六模型加权集成的 D1 HEG200 和 HEG50 PCC 分别为 0.2343 和 0.3180，较 ST-Net 适配分别提高 0.0872 和 0.1202。
 
 实验支持将多尺度组织信息用于人肝空间表达预测，并为模型集成的增益范围提供了定量证据。所建立的数据处理、模型选择和结果核验流程可用于后续扩展到更多供体及更大规模的数据。
 
@@ -462,6 +456,8 @@ python run.py evaluate \
   --output results/final_metrics.json
 \end{verbatim}\end{small}\end{minipage}\par
 运行需事先准备数据缓存与六份模型参数。代码仓库保存训练入口、配置和文件摘要，大型原始数据与权重单独保留。
+
+项目代码仓库：\url{https://github.com/LiyuanTuo/he2st-liver-benchmark}。
 
 \section{完整配置比较}\label{app:configurations}
 表\ref{tab:complete}保留全部既有基线与 ContextFusion 对照，以支持正文的主要比较。Context-RBF 为固定多尺度特征上的径向基核回归；它与端到端 ContextFusion 分别作为特征回归和图像特征学习的方案记录。
@@ -507,10 +503,6 @@ $\mathcal N_k(i)$ 是按图像坐标确定、排除自身的 $k$ 个近邻。预
 
 C1 选择不平滑输出（HEG200为0.3665）；最佳非零平滑候选为$k=6$、$\alpha=0.25$，对应0.3580。因此最终测试预测保持不变。该结果限定于所测试的邻域和权重范围，不扩展为对所有空间建模方法的判断。完整计划、验证结果与选择记录见 \code{benchmarks/liver/report_spatial_ablation/}。
 
-\subsection{预处理核验与论文指标复查}
-早期基因列表按表达方差选择并排除了核糖体和线粒体基因，与当前高表达集合没有重叠。现有主表已按第2节重新选择基因并使用一致测试目标，早期列表的分数不用于证明当前模型改进。不同归一化分母引起的指标变化也与同一目标上的模型改进分开记录。
-
-鼠脑 ResSAT 复查采用单种子实验：SA 使用作者处理后示例，SP 根据当前下载数据近似重建处理流程。重建目标下2000个高变基因 PCC 分别为0.6506和0.6667，对应原论文0.6577和0.6980；该设置下高表达50基因的本地结果为0.8803和0.8930。它们验证的是论文相关条件下的结果量级，不纳入人肝方法排序。
 
 \clearpage
 \begin{thebibliography}{9}
@@ -520,7 +512,7 @@ C1 选择不平滑输出（HEG200为0.3665）；最佳非零平滑候选为$k=6$
 \bibitem{ressat} Liu A, Zhao Y, Kim W K, et al. ResSAT: enhancing spatial transcriptomics prediction from H\&E-stained histology images with an interactive spot transformer. \textit{Genome Biology}, 2026, article in press. \url{https://doi.org/10.1186/s13059-026-04168-x}.
 \bibitem{genar} Ouyang J, Wang Y, Gao Y, et al. GenAR: Next-Scale Autoregressive Generation for Spatial Gene Expression Prediction. arXiv:2510.04315, 2025. \url{https://arxiv.org/abs/2510.04315}.
 \bibitem{stem} Zhu S, Zhu Y, Tao M, Qiu P. Diffusion Generative Modeling for Spatially Resolved Gene Expression Inference from Histology Images. \textit{ICLR}, 2025. \url{https://github.com/SichenZhu/Stem}.
-\bibitem{geo} NCBI Gene Expression Omnibus. GSE240429: human liver spatial transcriptomics data. 数据访问与下载记录见项目数据说明。\url{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE240429}.
+\bibitem{geo} NCBI Gene Expression Omnibus. GSE240429: human liver spatial transcriptomics data. \url{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE240429}.
 \bibitem{andrews} Andrews T S, Nakib D, Perciani C T, et al. Single-cell, single-nucleus, and spatial transcriptomics characterization of the immunological landscape in the healthy and PSC human liver. \textit{Journal of Hepatology}, 2024, 80(5):730--743. \url{https://doi.org/10.1016/j.jhep.2023.12.023}.
 \bibitem{singlepatch} Jang H, Shin H, et al. From histology to spatial transcriptomics: establishing a lightweight single-patch baseline. \textit{BMC Bioinformatics}, 2026, 27:168. \url{https://doi.org/10.1186/s12859-026-06447-7}.
 \end{thebibliography}

@@ -6,5 +6,4 @@
 - [实验结果](RESULTS.md)：本轮实际测量与局限。
 - [最终集成](ENSEMBLE.md)：六模型权重、方法、效果和直接推理。
 - [正式实验报告](../report/main.pdf) · [LaTeX源码](../report/main.tex) · [最终PPT](../presentation/final_report.pptx)。
-- `01_`–`06_`：历史任务说明、适配方法、审计和前轮诊断；部分链接指向仅本地保留的数据或报告。
-- `history/`：整理前的首页和数据说明快照，不作为当前运行指南。
+- [方法与协议记录](02_METHODS_AND_PROTOCOL.md)、[PCC诊断](05_PCC_DIAGNOSIS.md)、[多尺度实验](06_LIVER_CONTEXT_IMPROVEMENT.md)：保留支撑实验复现的历史证据，部分链接指向本地数据。已移除被正式报告替代的入门页、旧进度汇报及首页快照。

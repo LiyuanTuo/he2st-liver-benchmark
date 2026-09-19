@@ -161,8 +161,6 @@ wsl python3 scripts/50_audit_protocol_and_assets.py
 wsl python3 scripts/50b_audit_image_alignment.py
 wsl python3 scripts/51_verify_ressat_checkpoints.py
 py -3.12 -X utf8 scripts/52_evaluate_verified_benchmark.py
-py -3.12 -X utf8 scripts/53_update_verified_ppt.py
-py -3.12 -X utf8 scripts/54_write_verified_report.py
 ```
 
 训练和推理复跑见 `run_heg_pipeline.sh`。PPT 主报告没有把重算旧权重描述成新训练；本轮新训练的是 HEG Stem 与 DenseNet121 ST-Net。

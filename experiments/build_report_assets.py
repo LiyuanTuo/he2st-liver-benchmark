@@ -53,7 +53,7 @@ def main():
     box(6.5,1.65,3.1,1.6,'Final: 0.75 O + 0.25 N\nweight chosen on C1 HEG200\nD1: 0.2343 / 0.3180','#f9edec')
     arrow((1.9,2.7),(2.6,3.6));arrow((1.9,2.0),(2.6,1.35));arrow((5.6,3.6),(6.5,2.8));arrow((5.6,1.35),(6.5,2.05))
     ax.text(5,.05,'All averages operate in the same predicted panel-log expression space; no test RNA is used.',ha='center',fontsize=9)
-    fig.savefig(FIG/'ensemble_method.pdf');fig.savefig(FIG/'ensemble_method.png',dpi=180);plt.close(fig)
+    fig.savefig(FIG/'ensemble_method.pdf');plt.close(fig)
     methods=['ST-Net (DenseNet121)','ContextFusion-scratch','ContextFusion-multiseed']
     selected=baseline.set_index('method').loc[methods]
     vals=np.vstack([selected[['HEG200','HEG50']].values,[b.D1_HEG200,b.D1_HEG50]])
@@ -63,7 +63,7 @@ def main():
     ax.axhline(.5,color='gray',ls='--',lw=.8);ax.legend(loc='upper left')
     for i in range(4):
         for j in range(2):ax.text(i+(-.18 if j==0 else .18),vals[i,j]+.007,f'{vals[i,j]:.4f}',ha='center',fontsize=8)
-    fig.savefig(FIG/'comparison.pdf');fig.savefig(FIG/'comparison.png',dpi=180);plt.close(fig)
+    fig.savefig(FIG/'comparison.pdf');plt.close(fig)
     d=dict(np.load(ROOT/'results/optimization_20260914/test_candidates.npz'))
     old=dict(np.load(ROOT/'results/liver_context_20260913/combined_predictions.npz'))
     for key in ['genes','barcodes','coordinates_xy','truth']:
@@ -79,7 +79,7 @@ def main():
             if col:title+=f'\nr={pearsonr(truth.astype(float),value.astype(float)).statistic:.3f}'
             ax.set_title(title,fontsize=9);ax.set_aspect('equal');ax.invert_yaxis();ax.set_axis_off()
         fig.colorbar(im,ax=axes[row,:],shrink=.8,label='Panel-relative log1p')
-    fig.savefig(FIG/'spatial_examples.pdf');fig.savefig(FIG/'spatial_examples.png',dpi=180);plt.close(fig)
+    fig.savefig(FIG/'spatial_examples.pdf');plt.close(fig)
     # Error diversity is descriptive; it does not choose weights on D1.
     base_arrays=[]
     for c in final['components']:
