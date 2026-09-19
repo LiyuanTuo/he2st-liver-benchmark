@@ -421,7 +421,7 @@ HEG50 PCC&0.3180&[0.2489, 0.3722]\\
 \appendix
 \section{方法适配与复现实验设置}\label{app:implementation}
 \subsection{已有方法的训练目标与选择方式}
-为便于区分作者方法和本地实现，表\ref{tab:adaptation}概括各方法的主要适配。表内“全转录组 log 目标”指选取的 200 个基因仍以每个位置的全转录组总计数归一化；其预测最终按第\ref{sec:target}节换算。
+为便于区分作者方法和本地实现，表\ref{tab:adaptation}概括各方法的主要适配。
 
 \begin{table}[H]\centering\footnotesize
 \caption{已有方法的实际实现及模型选择}\label{tab:adaptation}
@@ -460,7 +460,7 @@ python run.py evaluate \
 项目代码仓库：\url{https://github.com/LiyuanTuo/he2st-liver-benchmark}。
 
 \section{完整配置比较}\label{app:configurations}
-表\ref{tab:complete}保留全部既有基线与 ContextFusion 对照，以支持正文的主要比较。Context-RBF 为固定多尺度特征上的径向基核回归；它与端到端 ContextFusion 分别作为特征回归和图像特征学习的方案记录。
+表\ref{tab:complete}保留全部既有基线与 ContextFusion 对照，以支持正文的比较。Context-RBF 为固定多尺度特征上的径向基核回归；它与端到端 ContextFusion 分别作为特征回归和图像特征学习的方案记录。
 
 \begin{table}[H]\centering\small
 \caption{全部基线与结构对照的 D1 结果}\label{tab:complete}

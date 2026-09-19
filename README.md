@@ -2,18 +2,16 @@
 
 在固定的人肝 GSE240429 基准上，比较 ResSAT、GenAR、Stem、ST-Net、BLEEP 等适配方法，并训练自建三尺度 ContextFusion 模型。
 
-**固定协议：A1+B1 训练、C1 验证、D1 测试；训练集选定 HEG200 / HEG50；测试真值不做重建。** 本轮 C1 选择模型在固定 D1 的 PCC 为 **0.2343 / 0.3180**，原 ST-Net 为 **0.1472 / 0.1978**。完整对照和局限见[结果报告](docs/RESULTS.md)；固定面板平均仍未达到 0.5。
+**固定协议：A1+B1 训练、C1 验证、D1 测试；训练集选定 HEG200 / HEG50。** 在固定 D1 的 PCC 为 **0.2343 / 0.3180**，原 ST-Net 为 **0.1472 / 0.1978**。完整对照和局限见[结果报告](docs/RESULTS.md)；固定面板平均仍未达到 0.5。
 
-最终方案是 **75% 原三种子均值 + 25% 新三模型均值**。相对原集成只增加 0.0042 / 0.0024，MAE 略变差；HEG50 增益区间跨零。详见[集成方法与记录](docs/ENSEMBLE.md)。
+集成模型方案是 **75% 原模型均值 + 25% 新模型均值**。相对原集成只增加 0.0042 / 0.0024，MAE 略变差；详见[集成方法与记录](docs/ENSEMBLE.md)。
 
-**正式交付：** [实验报告 PDF](report/main.pdf) · [LaTeX 源码](report/main.tex) · [最终 PPTX（11页）](presentation/final_report.pptx) · [演示 PDF](presentation/final_report.pdf)。
-
-报告现含 **17 幅图**，覆盖五种方法及自建网络架构、集成机制、真实输入和结果诊断，逐图附解释与来源。新增预测空间平滑对照未改善 C1，仍保留上述六模型结果；[修订与重建说明](report/README.md)。
+报告覆盖五种方法及自建网络架构、集成机制、真实输入和结果诊断，逐图附解释与来源。
 
 ## 快速开始
 
 使用已有的全局 Python 环境，在仓库根目录运行：
-
+ 
 ```bash
 python run.py doctor
 python run.py fit --config configs/resnet18_ema.json --output results/my_run
